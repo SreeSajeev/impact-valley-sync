@@ -109,10 +109,14 @@ const LoginPage = () => {
 
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
+        animate={{ 
+          opacity: 1, 
+          y: 0, 
+          scale: 1,
+          x: isShaking ? [-10, 10, -10, 10, 0] : 0
+        }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="w-full max-w-md bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20"
-        animate={isShaking ? { x: [-10, 10, -10, 10, 0] } : {}}
       >
         {/* Header with sparkle effect */}
         <div className="text-center mb-8">

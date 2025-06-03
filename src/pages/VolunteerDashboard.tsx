@@ -63,10 +63,10 @@ const VolunteerDashboard = () => {
     }
   ];
 
-  const getTimeLeft = (deadline) => {
+  const getTimeLeft = (deadline: string) => {
     const now = new Date();
     const deadlineDate = new Date(deadline);
-    const diffTime = deadlineDate - now;
+    const diffTime = deadlineDate.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     if (diffDays <= 0) return "Expired";
@@ -74,7 +74,7 @@ const VolunteerDashboard = () => {
     return `${diffDays} days left`;
   };
 
-  const getUrgencyColor = (urgency) => {
+  const getUrgencyColor = (urgency: string) => {
     switch (urgency) {
       case 'high': return 'from-red-500 to-pink-500';
       case 'medium': return 'from-yellow-500 to-orange-500';
