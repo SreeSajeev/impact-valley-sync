@@ -1,5 +1,7 @@
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import VideoBackground from './VideoBackground';
 
 const HeroSection = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -12,12 +14,13 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated Background Layers */}
-      <div className="absolute inset-0">
-        {/* Sky Gradient */}
+      {/* Video Background */}
+      <VideoBackground src="/animebg_1.mp4" />
+
+      {/* Commented out Animated Background Layers */}
+      {/* <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900 via-blue-800 to-teal-600" />
 
-        {/* Floating Particles */}
         <div className="absolute inset-0">
           {[...Array(20)].map((_, i) => (
             <div
@@ -33,13 +36,11 @@ const HeroSection = () => {
           ))}
         </div>
 
-        {/* Parallax Layers */}
         <div
           className="absolute bottom-0 w-full h-64 bg-gradient-to-t from-green-800 to-transparent opacity-80"
           style={{ transform: `translateY(${scrollY * 0.5}px)` }}
         />
 
-        {/* Foreground Elements */}
         <div
           className="absolute bottom-0 left-0 w-32 h-32 bg-green-700 rounded-full opacity-60"
           style={{ transform: `translateY(${scrollY * 0.3}px)` }}
@@ -48,7 +49,7 @@ const HeroSection = () => {
           className="absolute bottom-0 right-0 w-24 h-24 bg-green-600 rounded-full opacity-40"
           style={{ transform: `translateY(${scrollY * 0.4}px)` }}
         />
-      </div>
+      </div> */}
 
       {/* Hero Content */}
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
