@@ -15,7 +15,8 @@ const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Video Background */}
-      <VideoBackground src="/animebg_1.mp4" />
+      <VideoBackground src="https://www.w3schools.com/html/mov_bbb.mp4" />
+
 
       {/* Commented out Animated Background Layers */}
       {/* <div className="absolute inset-0">
