@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -53,7 +53,6 @@ const LoginPage = () => {
       setIsShaking(true);
       setTimeout(() => setIsShaking(false), 500);
     } else {
-      // Handle login logic here
       console.log('Login successful');
     }
   };
@@ -62,141 +61,272 @@ const LoginPage = () => {
     e.preventDefault();
     if (validateEmail(formData.forgotEmail)) {
       setShowForgotModal(false);
-      // Show success toast here
       console.log('Password recovery instructions sent');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       <VideoBackground src="/assets/bg.mp4" />
       
-      <motion.div
-        className="w-full max-w-md bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8"
-        animate={isShaking ? { x: [-10, 10, -10, 10, 0] } : {}}
-        transition={{ duration: 0.5 }}
+      {/* Floating particles for ambiance */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-20"
+            animate={{
+              x: [0, 100, 0],
+              y: [0, -100, 0],
+              scale: [1, 1.5, 1],
+            }}
+            transition={{
+              duration: 8 + i * 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            style={{
+              left: `${10 + i * 15}%`,
+              top: `${20 + i * 10}%`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Back button */}
+      <Link
+        to="/"
+        className="absolute top-6 left-6 z-10 flex items-center space-x-2 text-white/80 hover:text-white transition-all duration-300 group"
       >
+        <motion.div
+          whileHover={{ x: -4 }}
+          className="flex items-center space-x-2"
+        >
+          <ArrowLeft size={20} />
+          <span className="font-medium">Back</span>
+        </motion.div>
+      </Link>
+
+      <motion.div
+        initial={{ opacity: 0, y: 40, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full max-w-md bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20"
+        animate={isShaking ? { x: [-10, 10, -10, 10, 0] } : {}}
+      >
+        {/* Header with sparkle effect */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Sign in to continue your volunteer journey</p>
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.3, type: "spring" }}
+            className="w-16 h-16 bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg"
+          >
+            <Sparkles className="text-white" size={28} />
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-3xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent mb-2"
+          >
+            Welcome Back
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-white/70"
+          >
+            Continue your journey of making a difference
+          </motion.p>
         </div>
 
-        {/* Mode Toggle */}
-        <div className="flex items-center justify-center space-x-4 mb-8">
-          <span className={`text-sm font-medium ${!isNGO ? 'text-blue-600' : 'text-gray-500'}`}>
+        {/* Animated Mode Toggle */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6 }}
+          className="flex items-center justify-center space-x-4 mb-8 p-4 bg-white/5 rounded-2xl border border-white/10"
+        >
+          <motion.span
+            className={`text-sm font-medium transition-colors duration-300 ${
+              !isNGO ? 'text-blue-300' : 'text-white/50'
+            }`}
+            whileHover={{ scale: 1.05 }}
+          >
             Volunteer
-          </span>
-          <Switch
-            checked={isNGO}
-            onCheckedChange={setIsNGO}
-            className="data-[state=checked]:bg-green-600"
-          />
-          <span className={`text-sm font-medium ${isNGO ? 'text-green-600' : 'text-gray-500'}`}>
+          </motion.span>
+          <motion.div whileTap={{ scale: 0.95 }}>
+            <Switch
+              checked={isNGO}
+              onCheckedChange={setIsNGO}
+              className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-green-400 data-[state=checked]:to-emerald-500"
+            />
+          </motion.div>
+          <motion.span
+            className={`text-sm font-medium transition-colors duration-300 ${
+              isNGO ? 'text-green-300' : 'text-white/50'
+            }`}
+            whileHover={{ scale: 1.05 }}
+          >
             NGO
-          </span>
-        </div>
+          </motion.span>
+        </motion.div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Email Input */}
-          <div className="relative">
-            <Label
-              htmlFor="email"
-              className={`absolute left-3 transition-all duration-200 pointer-events-none ${
+          {/* Floating Label Email Input */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.7 }}
+            className="relative"
+          >
+            <motion.div
+              className={`absolute left-3 transition-all duration-300 pointer-events-none ${
                 formData.email
-                  ? 'top-0 text-xs text-blue-600 bg-white px-1 -translate-y-1/2'
-                  : 'top-1/2 text-sm text-gray-500 -translate-y-1/2'
+                  ? 'top-0 text-xs text-blue-300 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent px-2 -translate-y-1/2'
+                  : 'top-1/2 text-sm text-white/50 -translate-y-1/2'
               }`}
+              animate={{ y: formData.email ? -12 : 0 }}
             >
               Email Address
-            </Label>
+            </motion.div>
             <Input
-              id="email"
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="pt-4 pb-2 border-2 focus:border-blue-500"
+              className="pt-6 pb-2 bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-blue-400 focus:bg-white/15 transition-all duration-300"
             />
             {errors.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-red-300 text-xs mt-1"
+              >
+                {errors.email}
+              </motion.p>
             )}
-          </div>
+          </motion.div>
 
-          {/* Password Input */}
-          <div className="relative">
-            <Label
-              htmlFor="password"
-              className={`absolute left-3 transition-all duration-200 pointer-events-none ${
+          {/* Floating Label Password Input */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.8 }}
+            className="relative"
+          >
+            <motion.div
+              className={`absolute left-3 transition-all duration-300 pointer-events-none ${
                 formData.password
-                  ? 'top-0 text-xs text-blue-600 bg-white px-1 -translate-y-1/2'
-                  : 'top-1/2 text-sm text-gray-500 -translate-y-1/2'
+                  ? 'top-0 text-xs text-blue-300 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent px-2 -translate-y-1/2'
+                  : 'top-1/2 text-sm text-white/50 -translate-y-1/2'
               }`}
+              animate={{ y: formData.password ? -12 : 0 }}
             >
               Password
-            </Label>
+            </motion.div>
             <Input
-              id="password"
               type={showPassword ? 'text' : 'password'}
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="pt-4 pb-2 pr-12 border-2 focus:border-blue-500"
+              className="pt-6 pb-2 pr-12 bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-blue-400 focus:bg-white/15 transition-all duration-300"
             />
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/80 transition-colors"
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
+            </motion.button>
             {errors.password && (
-              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-red-300 text-xs mt-1"
+              >
+                {errors.password}
+              </motion.p>
             )}
-          </div>
+          </motion.div>
 
-          <Button
-            type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-lg font-semibold transition-all duration-200 hover:scale-105"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
           >
-            Sign In
-          </Button>
+            <Button
+              type="submit"
+              className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-blue-500/25"
+            >
+              <motion.span
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center justify-center space-x-2"
+              >
+                <span>Sign In</span>
+                <Sparkles size={18} className="animate-pulse" />
+              </motion.span>
+            </Button>
+          </motion.div>
         </form>
 
-        <div className="text-right mt-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.0 }}
+          className="text-right mt-4"
+        >
           <button
             onClick={() => setShowForgotModal(true)}
-            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            className="text-blue-300 hover:text-blue-200 text-sm font-medium transition-colors duration-300 hover:underline"
           >
             Forgot Password?
           </button>
-        </div>
+        </motion.div>
 
-        <div className="text-center mt-6">
-          <p className="text-gray-600">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.1 }}
+          className="text-center mt-6"
+        >
+          <p className="text-white/70">
             Don't have an account?{' '}
-            <Link to="/signup" className="text-blue-600 hover:text-blue-800 font-medium">
-              Sign up
+            <Link to="/signup" className="text-blue-300 hover:text-blue-200 font-medium transition-colors duration-300 hover:underline">
+              Join the community
             </Link>
           </p>
-        </div>
+        </motion.div>
       </motion.div>
 
-      {/* Forgot Password Modal */}
+      {/* Enhanced Forgot Password Modal */}
       {showForgotModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
+          onClick={() => setShowForgotModal(false)}
+        >
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-2xl p-6 max-w-md w-full mx-4"
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 max-w-md w-full mx-4"
+            onClick={e => e.stopPropagation()}
           >
-            <h3 className="text-xl font-bold mb-4">Reset Password</h3>
+            <h3 className="text-xl font-bold text-white mb-4">Reset Password</h3>
             <form onSubmit={handleForgotPassword}>
               <div className="mb-4">
-                <Label htmlFor="forgotEmail">Email Address</Label>
+                <Label htmlFor="forgotEmail" className="text-white/80">Email Address</Label>
                 <Input
                   id="forgotEmail"
                   type="email"
                   value={formData.forgotEmail}
                   onChange={(e) => setFormData({ ...formData, forgotEmail: e.target.value })}
-                  className="mt-1"
+                  className="mt-1 bg-white/10 border-white/20 text-white placeholder:text-white/30"
                   placeholder="Enter your email"
                 />
               </div>
@@ -205,17 +335,20 @@ const LoginPage = () => {
                   type="button"
                   variant="outline"
                   onClick={() => setShowForgotModal(false)}
-                  className="flex-1"
+                  className="flex-1 border-white/20 text-white/80 hover:bg-white/10"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="flex-1">
+                <Button 
+                  type="submit" 
+                  className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                >
                   Send Instructions
                 </Button>
               </div>
             </form>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </div>
   );

@@ -9,6 +9,8 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import VolunteerProfile from "./pages/VolunteerProfile";
 import NGOProfile from "./pages/NGOProfile";
+import VolunteerDashboard from "./pages/VolunteerDashboard";
+import NGODashboard from "./pages/NGODashboard";
 import NotFound from "./pages/NotFound";
 import CursorTrail from "./components/CursorTrail";
 
@@ -27,6 +29,8 @@ const App = () => (
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/volunteer-profile" element={<VolunteerProfile />} />
           <Route path="/ngo-profile" element={<NGOProfile />} />
+          <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />
+          <Route path="/ngo-dashboard" element={<NGODashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

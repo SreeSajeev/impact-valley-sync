@@ -1,97 +1,71 @@
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Check, ChevronRight, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, ArrowRight, Check, User, Mail, Phone, Lock, Building, MapPin, Calendar, Plus, X, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Progress } from '@/components/ui/progress';
 import VideoBackground from '@/components/VideoBackground';
 
 const SignupPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isNGO, setIsNGO] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [volunteerData, setVolunteerData] = useState({
     fullName: '',
     email: '',
     phone: '',
     password: '',
     confirmPassword: '',
+    skills: [],
+    availability: {},
+    preferences: {
+      weekends: false,
+      remote: false,
+      evening: false
+    }
+  });
+
+  const [ngoData, setNgoData] = useState({
     orgName: '',
+    email: '',
+    phone: '',
+    password: '',
     address: '',
     city: '',
     state: '',
     pincode: '',
-    country: '',
-    skills: [] as string[],
-    availability: {} as Record<string, 'available' | 'maybe' | 'unavailable'>,
-    preferences: {
-      weekends: false,
-      remote: false,
-      evenings: false
-    }
+    country: ''
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [skillSearchTerm, setSkillSearchTerm] = useState('');
+  const [showSkillDropdown, setShowSkillDropdown] = useState(false);
 
-  const skillOptions = [
-    'Teaching', 'Healthcare', 'Technology', 'Marketing', 'Finance', 
-    'Legal', 'Design', 'Writing', 'Translation', 'Event Planning',
-    'Social Media', 'Photography', 'Counseling', 'Research'
+  const availableSkills = [
+    'Teaching', 'Healthcare', 'Technology', 'Environment', 'Community Service',
+    'Fundraising', 'Event Planning', 'Marketing', 'Design', 'Writing',
+    'Photography', 'Translation', 'Legal Aid', 'Counseling', 'Construction'
   ];
 
-  const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const filteredSkills = availableSkills.filter(skill => 
+    skill.toLowerCase().includes(skillSearchTerm.toLowerCase()) &&
+    !selectedSkills.includes(skill)
+  );
 
-  const validateStep = (step: number) => {
-    const newErrors: Record<string, string> = {};
-
-    if (step === 1) {
-      if (!formData.fullName) newErrors.fullName = 'Full name is required';
-      if (!formData.email.includes('@')) newErrors.email = 'Valid email is required';
-      if (!formData.phone) newErrors.phone = 'Phone number is required';
-      if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-      if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const addSkill = (skill) => {
+    setSelectedSkills([...selectedSkills, skill]);
+    setSkillSearchTerm('');
+    setShowSkillDropdown(false);
   };
 
-  const handleNext = () => {
-    if (validateStep(currentStep)) {
-      setCurrentStep(prev => Math.min(prev + 1, 3));
-    }
-  };
-
-  const handleSkillToggle = (skill: string) => {
-    setFormData(prev => ({
-      ...prev,
-      skills: prev.skills.includes(skill)
-        ? prev.skills.filter(s => s !== skill)
-        : [...prev.skills, skill]
-    }));
-  };
-
-  const handleAvailabilityToggle = (day: string) => {
-    const currentStatus = formData.availability[day];
-    let newStatus: 'available' | 'maybe' | 'unavailable';
-    
-    if (!currentStatus || currentStatus === 'unavailable') {
-      newStatus = 'available';
-    } else if (currentStatus === 'available') {
-      newStatus = 'maybe';
-    } else {
-      newStatus = 'unavailable';
-    }
-
-    setFormData(prev => ({
-      ...prev,
-      availability: { ...prev.availability, [day]: newStatus }
-    }));
+  const removeSkill = (skillToRemove) => {
+    setSelectedSkills(selectedSkills.filter(skill => skill !== skillToRemove));
   };
 
   const handleSubmit = async () => {
@@ -101,388 +75,451 @@ const SignupPage = () => {
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     setIsSubmitting(false);
-    setIsSuccess(true);
+    setShowSuccess(true);
     
-    // Redirect after showing success
+    // Redirect after success animation
     setTimeout(() => {
       // Navigate to dashboard
     }, 2000);
   };
 
-  const getAvailabilityColor = (status?: string) => {
-    switch (status) {
-      case 'available': return 'bg-green-500';
-      case 'maybe': return 'bg-yellow-500';
-      case 'unavailable': return 'bg-red-500';
-      default: return 'bg-gray-200';
-    }
-  };
+  const progressPercentage = (currentStep / 3) * 100;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       <VideoBackground src="/assets/bg.mp4" />
       
-      <motion.div className="w-full max-w-2xl bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8">
-        {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            {[1, 2, 3].map((step) => (
-              <div
-                key={step}
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                  step <= currentStep
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 text-gray-500'
-                }`}
-              >
-                {step < currentStep ? <Check size={16} /> : step}
-              </div>
-            ))}
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <motion.div
-              className="bg-blue-600 h-2 rounded-full"
-              initial={{ width: '33%' }}
-              animate={{ width: `${(currentStep / 3) * 100}%` }}
-              transition={{ duration: 0.3 }}
-            />
-          </div>
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(8)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-3 h-3 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-20"
+            animate={{
+              x: [0, 100, 0],
+              y: [0, -50, 0],
+              rotate: [0, 360],
+            }}
+            transition={{
+              duration: 10 + i * 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            style={{
+              left: `${5 + i * 12}%`,
+              top: `${10 + i * 8}%`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Back button */}
+      <Link
+        to="/"
+        className="absolute top-6 left-6 z-10 flex items-center space-x-2 text-white/80 hover:text-white transition-all duration-300"
+      >
+        <motion.div
+          whileHover={{ x: -4 }}
+          className="flex items-center space-x-2"
+        >
+          <ArrowLeft size={20} />
+          <span className="font-medium">Back</span>
+        </motion.div>
+      </Link>
+
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-2xl bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20"
+      >
+        {/* Header */}
+        <div className="text-center mb-8">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent mb-2"
+          >
+            Join the Community
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-white/70"
+          >
+            Start making a difference today
+          </motion.p>
         </div>
 
         {/* Mode Toggle */}
-        <div className="flex items-center justify-center space-x-4 mb-8">
-          <span className={`text-sm font-medium ${!isNGO ? 'text-blue-600' : 'text-gray-500'}`}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+          className="flex items-center justify-center space-x-4 mb-8 p-4 bg-white/5 rounded-2xl border border-white/10"
+        >
+          <span className={`text-sm font-medium transition-colors duration-300 ${!isNGO ? 'text-blue-300' : 'text-white/50'}`}>
             Volunteer
           </span>
           <Switch
             checked={isNGO}
             onCheckedChange={setIsNGO}
-            className="data-[state=checked]:bg-green-600"
+            className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-green-400 data-[state=checked]:to-emerald-500"
           />
-          <span className={`text-sm font-medium ${isNGO ? 'text-green-600' : 'text-gray-500'}`}>
+          <span className={`text-sm font-medium transition-colors duration-300 ${isNGO ? 'text-green-300' : 'text-white/50'}`}>
             NGO
           </span>
-        </div>
+        </motion.div>
 
-        {/* Step 1: Basic Info */}
-        {currentStep === 1 && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-6"
-          >
-            <h2 className="text-2xl font-bold text-center mb-6">
-              {isNGO ? 'Organization Information' : 'Basic Information'}
-            </h2>
+        {/* Progress Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mb-8"
+        >
+          <div className="flex justify-between text-sm text-white/70 mb-2">
+            <span className={currentStep >= 1 ? 'text-blue-300' : ''}>Basic Info</span>
+            <span className={currentStep >= 2 ? 'text-blue-300' : ''}>{isNGO ? 'Organization' : 'Skills'}</span>
+            <span className={currentStep >= 3 ? 'text-blue-300' : ''}>Confirm</span>
+          </div>
+          <Progress value={progressPercentage} className="h-2 bg-white/10" />
+        </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="fullName">{isNGO ? 'Organization Name' : 'Full Name'}</Label>
-                <Input
-                  id="fullName"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  className="mt-1"
-                />
-                {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
-              </div>
-
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="mt-1"
-                />
-                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-              </div>
-
-              <div>
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="mt-1"
-                />
-                {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
-              </div>
-
-              <div>
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="mt-1"
-                />
-                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-              </div>
-
-              <div className="md:col-span-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  value={formData.confirmPassword}
-                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  className="mt-1"
-                />
-                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Step 2: Skills & Preferences (Volunteers) or Location (NGOs) */}
-        {currentStep === 2 && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-6"
-          >
-            {!isNGO ? (
-              <>
-                <h2 className="text-2xl font-bold text-center mb-6">Skills & Preferences</h2>
-                
-                {/* Skills Selection */}
-                <div>
-                  <Label className="text-lg font-semibold mb-4 block">Select Your Skills</Label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {skillOptions.map((skill) => (
-                      <motion.button
-                        key={skill}
-                        onClick={() => handleSkillToggle(skill)}
-                        className={`p-3 rounded-lg border text-sm font-medium transition-all ${
-                          formData.skills.includes(skill)
-                            ? 'bg-blue-600 text-white border-blue-600'
-                            : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
-                        }`}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        {skill}
-                        {formData.skills.includes(skill) && (
-                          <Check className="inline ml-1" size={14} />
-                        )}
-                      </motion.button>
-                    ))}
-                  </div>
+        {/* Form Steps */}
+        <AnimatePresence mode="wait">
+          {currentStep === 1 && (
+            <motion.div
+              key="step1"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="relative">
+                  <Label className="text-white/80 mb-2 block">
+                    <User size={16} className="inline mr-2" />
+                    {isNGO ? 'Organization Name' : 'Full Name'}
+                  </Label>
+                  <Input
+                    value={isNGO ? ngoData.orgName : volunteerData.fullName}
+                    onChange={(e) => isNGO 
+                      ? setNgoData({...ngoData, orgName: e.target.value})
+                      : setVolunteerData({...volunteerData, fullName: e.target.value})
+                    }
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                    placeholder={isNGO ? "Enter organization name" : "Enter your full name"}
+                  />
                 </div>
-
-                {/* Availability Calendar */}
-                <div>
-                  <Label className="text-lg font-semibold mb-4 block">Weekly Availability</Label>
-                  <div className="grid grid-cols-7 gap-2">
-                    {weekDays.map((day) => (
-                      <div key={day} className="text-center">
-                        <div className="text-sm font-medium mb-2">{day}</div>
-                        <button
-                          onClick={() => handleAvailabilityToggle(day)}
-                          className={`w-full h-12 rounded-lg border-2 transition-all hover:scale-105 ${getAvailabilityColor(formData.availability[day])}`}
-                          title={`${day}: ${formData.availability[day] || 'unavailable'}`}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex justify-center space-x-4 mt-4 text-xs">
-                    <div className="flex items-center space-x-1">
-                      <div className="w-3 h-3 bg-green-500 rounded"></div>
-                      <span>Available</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <div className="w-3 h-3 bg-yellow-500 rounded"></div>
-                      <span>Maybe</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <div className="w-3 h-3 bg-red-500 rounded"></div>
-                      <span>Unavailable</span>
-                    </div>
-                  </div>
+                <div className="relative">
+                  <Label className="text-white/80 mb-2 block">
+                    <Mail size={16} className="inline mr-2" />
+                    Email
+                  </Label>
+                  <Input
+                    type="email"
+                    value={isNGO ? ngoData.email : volunteerData.email}
+                    onChange={(e) => isNGO 
+                      ? setNgoData({...ngoData, email: e.target.value})
+                      : setVolunteerData({...volunteerData, email: e.target.value})
+                    }
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                    placeholder="Enter email address"
+                  />
                 </div>
-
-                {/* Preferences */}
-                <div>
-                  <Label className="text-lg font-semibold mb-4 block">Preferences</Label>
-                  <div className="space-y-3">
-                    {[
-                      { key: 'weekends', label: 'Prefer working weekends' },
-                      { key: 'remote', label: 'Comfortable with remote tasks' },
-                      { key: 'evenings', label: 'Available for evening tasks' }
-                    ].map((pref) => (
-                      <div key={pref.key} className="flex items-center space-x-3">
-                        <Checkbox
-                          id={pref.key}
-                          checked={formData.preferences[pref.key as keyof typeof formData.preferences]}
-                          onCheckedChange={(checked) =>
-                            setFormData({
-                              ...formData,
-                              preferences: { ...formData.preferences, [pref.key]: checked }
-                            })
-                          }
-                        />
-                        <Label htmlFor={pref.key}>{pref.label}</Label>
-                      </div>
-                    ))}
-                  </div>
+                <div className="relative">
+                  <Label className="text-white/80 mb-2 block">
+                    <Phone size={16} className="inline mr-2" />
+                    Phone
+                  </Label>
+                  <Input
+                    value={isNGO ? ngoData.phone : volunteerData.phone}
+                    onChange={(e) => isNGO 
+                      ? setNgoData({...ngoData, phone: e.target.value})
+                      : setVolunteerData({...volunteerData, phone: e.target.value})
+                    }
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                    placeholder="Enter phone number"
+                  />
                 </div>
-              </>
-            ) : (
-              <>
-                <h2 className="text-2xl font-bold text-center mb-6">Location Information</h2>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="address">Full Address</Label>
+                <div className="relative">
+                  <Label className="text-white/80 mb-2 block">
+                    <Lock size={16} className="inline mr-2" />
+                    Password
+                  </Label>
+                  <Input
+                    type="password"
+                    value={isNGO ? ngoData.password : volunteerData.password}
+                    onChange={(e) => isNGO 
+                      ? setNgoData({...ngoData, password: e.target.value})
+                      : setVolunteerData({...volunteerData, password: e.target.value})
+                    }
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                    placeholder="Create password"
+                  />
+                </div>
+                {!isNGO && (
+                  <div className="relative md:col-span-2">
+                    <Label className="text-white/80 mb-2 block">
+                      <Lock size={16} className="inline mr-2" />
+                      Confirm Password
+                    </Label>
                     <Input
-                      id="address"
-                      value={formData.address}
-                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      className="mt-1"
-                      placeholder="Enter full address"
+                      type="password"
+                      value={volunteerData.confirmPassword}
+                      onChange={(e) => setVolunteerData({...volunteerData, confirmPassword: e.target.value})}
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                      placeholder="Confirm password"
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="city">City</Label>
-                      <Input
-                        id="city"
-                        value={formData.city}
-                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="state">State</Label>
-                      <Input
-                        id="state"
-                        value={formData.state}
-                        onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="pincode">Pincode</Label>
-                      <Input
-                        id="pincode"
-                        value={formData.pincode}
-                        onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="country">Country</Label>
-                      <Input
-                        id="country"
-                        value={formData.country}
-                        onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </motion.div>
-        )}
-
-        {/* Step 3: Confirmation */}
-        {currentStep === 3 && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-6"
-          >
-            <h2 className="text-2xl font-bold text-center mb-6">Confirm & Submit</h2>
-            
-            <div className="bg-gray-50 rounded-lg p-6 space-y-4">
-              <div>
-                <h3 className="font-semibold text-gray-800">Basic Information</h3>
-                <p className="text-gray-600">{formData.fullName} • {formData.email}</p>
-                <button
-                  onClick={() => setCurrentStep(1)}
-                  className="text-blue-600 text-sm hover:underline"
-                >
-                  Edit
-                </button>
+                )}
               </div>
-              
-              {!isNGO && (
-                <div>
-                  <h3 className="font-semibold text-gray-800">Skills</h3>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {formData.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                      >
-                        {skill}
-                      </span>
-                    ))}
+            </motion.div>
+          )}
+
+          {currentStep === 2 && !isNGO && (
+            <motion.div
+              key="step2-volunteer"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              {/* Skills Section */}
+              <div>
+                <Label className="text-white/80 mb-4 block text-lg">Select Your Skills</Label>
+                <div className="relative">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <div className="relative flex-1">
+                      <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50" />
+                      <Input
+                        value={skillSearchTerm}
+                        onChange={(e) => {
+                          setSkillSearchTerm(e.target.value);
+                          setShowSkillDropdown(true);
+                        }}
+                        onFocus={() => setShowSkillDropdown(true)}
+                        className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                        placeholder="Search skills..."
+                      />
+                      {showSkillDropdown && filteredSkills.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="absolute z-10 w-full mt-1 bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg shadow-xl max-h-48 overflow-y-auto"
+                        >
+                          {filteredSkills.map((skill) => (
+                            <motion.button
+                              key={skill}
+                              whileHover={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
+                              onClick={() => addSkill(skill)}
+                              className="w-full text-left px-4 py-2 text-white/80 hover:text-white transition-colors"
+                            >
+                              {skill}
+                            </motion.button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </div>
                   </div>
-                  <button
-                    onClick={() => setCurrentStep(2)}
-                    className="text-blue-600 text-sm hover:underline"
-                  >
-                    Edit
-                  </button>
+                  
+                  {/* Selected Skills */}
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    <AnimatePresence>
+                      {selectedSkills.map((skill) => (
+                        <motion.div
+                          key={skill}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm flex items-center space-x-2"
+                        >
+                          <span>{skill}</span>
+                          <motion.button
+                            whileHover={{ scale: 1.2 }}
+                            onClick={() => removeSkill(skill)}
+                            className="text-white/80 hover:text-white"
+                          >
+                            <X size={14} />
+                          </motion.button>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
                 </div>
-              )}
-            </div>
-          </motion.div>
-        )}
+              </div>
+
+              {/* Preferences */}
+              <div>
+                <Label className="text-white/80 mb-4 block text-lg">Preferences</Label>
+                <div className="space-y-4">
+                  {[
+                    { key: 'weekends', label: 'Available on weekends', icon: Calendar },
+                    { key: 'remote', label: 'Comfortable with remote tasks', icon: User },
+                    { key: 'evening', label: 'Prefer evening activities', icon: Calendar }
+                  ].map((pref) => (
+                    <motion.div
+                      key={pref.key}
+                      whileHover={{ scale: 1.02 }}
+                      className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <pref.icon size={20} className="text-blue-300" />
+                        <span className="text-white/80">{pref.label}</span>
+                      </div>
+                      <Switch
+                        checked={volunteerData.preferences[pref.key]}
+                        onCheckedChange={(checked) => 
+                          setVolunteerData({
+                            ...volunteerData,
+                            preferences: { ...volunteerData.preferences, [pref.key]: checked }
+                          })
+                        }
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {currentStep === 2 && isNGO && (
+            <motion.div
+              key="step2-ngo"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2">
+                  <Label className="text-white/80 mb-2 block">
+                    <MapPin size={16} className="inline mr-2" />
+                    Full Address
+                  </Label>
+                  <Input
+                    value={ngoData.address}
+                    onChange={(e) => setNgoData({...ngoData, address: e.target.value})}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                    placeholder="Enter complete address"
+                  />
+                </div>
+                <div>
+                  <Label className="text-white/80 mb-2 block">City</Label>
+                  <Input
+                    value={ngoData.city}
+                    onChange={(e) => setNgoData({...ngoData, city: e.target.value})}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                    placeholder="City"
+                  />
+                </div>
+                <div>
+                  <Label className="text-white/80 mb-2 block">State</Label>
+                  <Input
+                    value={ngoData.state}
+                    onChange={(e) => setNgoData({...ngoData, state: e.target.value})}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                    placeholder="State"
+                  />
+                </div>
+                <div>
+                  <Label className="text-white/80 mb-2 block">Pincode</Label>
+                  <Input
+                    value={ngoData.pincode}
+                    onChange={(e) => setNgoData({...ngoData, pincode: e.target.value})}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                    placeholder="Pincode"
+                  />
+                </div>
+                <div>
+                  <Label className="text-white/80 mb-2 block">Country</Label>
+                  <Input
+                    value={ngoData.country}
+                    onChange={(e) => setNgoData({...ngoData, country: e.target.value})}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                    placeholder="Country"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {currentStep === 3 && (
+            <motion.div
+              key="step3"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <div className="text-center">
+                <h3 className="text-xl font-semibold text-white mb-4">Review Your Information</h3>
+                <div className="bg-white/5 rounded-xl p-6 text-left">
+                  {isNGO ? (
+                    <div className="space-y-2 text-white/80">
+                      <p><strong>Organization:</strong> {ngoData.orgName}</p>
+                      <p><strong>Email:</strong> {ngoData.email}</p>
+                      <p><strong>Phone:</strong> {ngoData.phone}</p>
+                      <p><strong>Address:</strong> {ngoData.address}</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2 text-white/80">
+                      <p><strong>Name:</strong> {volunteerData.fullName}</p>
+                      <p><strong>Email:</strong> {volunteerData.email}</p>
+                      <p><strong>Phone:</strong> {volunteerData.phone}</p>
+                      <p><strong>Skills:</strong> {selectedSkills.join(', ')}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Navigation Buttons */}
         <div className="flex justify-between mt-8">
           {currentStep > 1 && (
             <Button
+              onClick={() => setCurrentStep(currentStep - 1)}
               variant="outline"
-              onClick={() => setCurrentStep(prev => prev - 1)}
-              className="flex items-center space-x-2"
+              className="border-white/20 text-white/80 hover:bg-white/10"
             >
-              <span>Back</span>
+              <ArrowLeft size={16} className="mr-2" />
+              Previous
             </Button>
           )}
           
-          <div className="ml-auto">
-            {currentStep < 3 ? (
-              <Button
-                onClick={handleNext}
-                className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700"
-              >
-                <span>Next</span>
-                <ChevronRight size={16} />
-              </Button>
-            ) : (
-              <Button
-                onClick={handleSubmit}
-                disabled={isSubmitting || isSuccess}
-                className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 min-w-[120px]"
-              >
-                {isSubmitting ? (
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
-                  />
-                ) : isSuccess ? (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="w-4 h-4"
-                  >
-                    <Check size={16} />
-                  </motion.div>
-                ) : (
-                  <span>Submit</span>
-                )}
-              </Button>
-            )}
-          </div>
+          <div className="flex-1" />
+          
+          {currentStep < 3 ? (
+            <Button
+              onClick={() => setCurrentStep(currentStep + 1)}
+              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+            >
+              Next
+              <ArrowRight size={16} className="ml-2" />
+            </Button>
+          ) : (
+            <Button
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+            >
+              {isSubmitting ? (
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                />
+              ) : showSuccess ? (
+                <Check size={16} />
+              ) : (
+                'Complete Registration'
+              )}
+            </Button>
+          )}
         </div>
       </motion.div>
     </div>
