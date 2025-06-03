@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Discord, Twitter, Linkedin, Heart } from 'lucide-react';
+import { MessageCircle, Twitter, Linkedin, Heart } from 'lucide-react';
 
 const CommunitySection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -19,7 +19,7 @@ const CommunitySection = () => {
 
   const socialPlatforms = [
     {
-      icon: Discord,
+      icon: MessageCircle,
       name: "Discord",
       description: "Join our vibrant community of volunteers",
       members: "2.3k+ members",
