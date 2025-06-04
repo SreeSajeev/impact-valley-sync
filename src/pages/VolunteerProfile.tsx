@@ -1,23 +1,25 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Camera, Edit, MapPin, Phone, Mail, Star, Trophy, Target, Calendar, Settings, ArrowLeft } from 'lucide-react';
+import { Camera, Edit, MapPin, Phone, Mail, Star, Trophy, Target, Calendar, Settings, ArrowLeft, Crown, Gem, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Progress } from '@/components/ui/progress';
-import VideoBackground from '@/components/VideoBackground';
+import MysticalBackground from '@/components/MysticalBackground';
+import FloatingGem from '@/components/FloatingGem';
+import EnchantedButton from '@/components/EnchantedButton';
 
 const VolunteerProfile = () => {
   const [profileData, setProfileData] = useState({
-    name: 'Alex Johnson',
-    email: 'alex.johnson@email.com',
+    name: 'Alex the Kind-Hearted',
+    email: 'alex.seeker@mysticalrealm.com',
     phone: '+1 555 123 4567',
-    location: 'San Francisco, CA',
-    bio: 'Passionate about environmental conservation and community service.',
-    skills: ['Environmental', 'Teaching', 'Event Planning'],
+    location: 'Crystal Falls, Mystical Territories',
+    bio: 'A devoted seeker of good, wielding the powers of compassion and environmental magic.',
+    skills: ['Environmental Sorcery', 'Teaching Arts', 'Event Conjuring'],
     preferences: {
       weekends: true,
       remote: false,
@@ -26,171 +28,293 @@ const VolunteerProfile = () => {
   });
 
   const [gamificationData] = useState({
-    points: 2450,
+    heartLevel: 15,
+    questXP: 2450,
     rank: 12,
+    title: 'Guardian of Good',
+    familiar: '🦋', // Mystical butterfly companion
     badges: [
-      { name: 'Eco Warrior', icon: '🌱', description: 'Completed 10+ environmental tasks' },
-      { name: 'Team Player', icon: '🤝', description: 'Collaborated on 5+ group projects' },
-      { name: 'Dedicated Helper', icon: '⭐', description: 'Maintained 95%+ completion rate' }
+      { 
+        name: 'Emerald of Empathy', 
+        element: 'emerald',
+        description: 'Earned by helping children with special needs',
+        lore: 'This sacred gem pulses with the heartbeat of those you have comforted'
+      },
+      { 
+        name: 'Sapphire of Service', 
+        element: 'sapphire',
+        description: 'Completed 25+ community quests',
+        lore: 'Forged in the depths of selfless dedication'
+      },
+      { 
+        name: 'Ruby of Leadership', 
+        element: 'ruby',
+        description: 'Led 10+ volunteer teams',
+        lore: 'Burns with the fire of inspiration you kindle in others'
+      }
     ],
-    recentActivities: [
-      { task: 'Beach Cleanup Drive', points: 50, date: '2 days ago' },
-      { task: 'Teaching Session', points: 75, date: '1 week ago' },
-      { task: 'Food Distribution', points: 40, date: '2 weeks ago' }
+    recentQuests: [
+      { task: 'Enchanted Forest Restoration', points: 50, date: '2 moons ago', rarity: 'legendary' },
+      { task: 'Crystal Lake Teaching Circle', points: 75, date: '1 moon ago', rarity: 'epic' },
+      { task: 'Starlight Food Distribution', points: 40, date: '3 suns ago', rarity: 'rare' }
     ]
   });
 
   const [isEditing, setIsEditing] = useState(false);
-  const [hasChanges, setHasChanges] = useState(false);
+  const [hoveredBadge, setHoveredBadge] = useState<string | null>(null);
 
-  const handleSave = async () => {
-    // Simulate save
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsEditing(false);
-    setHasChanges(false);
-    // Show success toast
+  const getRarityColor = (rarity: string) => {
+    switch (rarity) {
+      case 'legendary': return 'from-amber-400 to-yellow-500';
+      case 'epic': return 'from-purple-400 to-pink-500';
+      case 'rare': return 'from-blue-400 to-cyan-500';
+      default: return 'from-gray-400 to-gray-500';
+    }
+  };
+
+  const getTitleCrown = (title: string) => {
+    const crowns = {
+      'Novice Sprout': '🌱',
+      'Gem Seeker': '💎',
+      'Task Warden': '⚔️',
+      'Guardian of Good': '👑'
+    };
+    return crowns[title] || '✨';
   };
 
   return (
-    <div className="min-h-screen relative">
-      <VideoBackground src="/assets/bg.mp4" />
-      
-      {/* Back button */}
+    <MysticalBackground variant="archive">
+      {/* Return Portal */}
       <Link
         to="/"
-        className="absolute top-6 left-6 z-10 flex items-center space-x-2 text-white/80 hover:text-white transition-all duration-300"
+        className="absolute top-6 left-6 z-10 flex items-center space-x-2 text-mystical-200 hover:text-amber-400 transition-all duration-300"
       >
         <motion.div
-          whileHover={{ x: -4 }}
-          className="flex items-center space-x-2"
+          whileHover={{ x: -4, scale: 1.1 }}
+          className="flex items-center space-x-2 font-medieval"
         >
           <ArrowLeft size={20} />
-          <span className="font-medium">Back</span>
+          <span>Return to Realm</span>
         </motion.div>
       </Link>
 
       <div className="container mx-auto px-4 py-8">
+        {/* Archive Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <motion.h1
+            className="text-5xl font-fantasy font-bold bg-gradient-to-r from-purple-300 via-mystical-200 to-amber-300 bg-clip-text text-transparent mb-4"
+            animate={{
+              textShadow: [
+                '0 0 20px rgba(139, 108, 242, 0.5)',
+                '0 0 40px rgba(139, 108, 242, 0.8)',
+                '0 0 20px rgba(139, 108, 242, 0.5)'
+              ]
+            }}
+            transition={{ duration: 4, repeat: Infinity }}
+          >
+            The Soulstone Archive
+          </motion.h1>
+          <p className="text-xl text-mystical-200 font-medieval">
+            Chronicle of the Kind-Hearted Hero
+          </p>
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="grid lg:grid-cols-3 gap-8"
         >
-          {/* Left Panel - Profile */}
+          {/* Hero Character Sheet */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
             className="lg:col-span-2 space-y-6"
           >
-            {/* Profile Header */}
-            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
+            {/* Magical Profile Stone */}
+            <div className="bg-mystical-900/60 backdrop-blur-xl rounded-3xl p-8 border border-purple-400/30 relative overflow-hidden">
+              {/* Floating Magical Elements */}
+              <div className="absolute top-4 right-4">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  className="text-3xl"
+                >
+                  {gamificationData.familiar}
+                </motion.div>
+              </div>
+
               <div className="flex items-center space-x-6 mb-6">
+                {/* Avatar Orb */}
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   className="relative group"
                 >
-                  <div className="w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-2xl font-bold text-white">
-                    {profileData.name.split(' ').map(n => n[0]).join('')}
-                  </div>
+                  <motion.div
+                    className="w-32 h-32 bg-gradient-to-br from-purple-400 via-mystical-500 to-amber-400 rounded-full flex items-center justify-center text-3xl font-bold text-white relative overflow-hidden"
+                    animate={{
+                      boxShadow: [
+                        '0 0 30px rgba(139, 108, 242, 0.5)',
+                        '0 0 50px rgba(139, 108, 242, 0.8)',
+                        '0 0 30px rgba(139, 108, 242, 0.5)'
+                      ]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    {/* Magical Inner Glow */}
+                    <div className="absolute inset-2 bg-gradient-to-br from-white/20 to-transparent rounded-full" />
+                    <span className="relative z-10">
+                      {profileData.name.split(' ').map(n => n[0]).join('')}
+                    </span>
+                    
+                    {/* Character Level Crown */}
+                    <motion.div
+                      className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-2xl"
+                      animate={{ y: [-2, 2, -2] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      {getTitleCrown(gamificationData.title)}
+                    </motion.div>
+                  </motion.div>
+                  
                   <motion.div
                     whileHover={{ opacity: 1 }}
                     className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                   >
-                    <Camera className="text-white" size={20} />
+                    <Camera className="text-white" size={24} />
                   </motion.div>
                 </motion.div>
                 
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-2">
-                    <h1 className="text-2xl font-bold text-white">{profileData.name}</h1>
-                    <Button
-                      onClick={() => setIsEditing(!isEditing)}
-                      variant="outline"
+                    <div className="flex items-center space-x-3">
+                      <h1 className="text-3xl font-fantasy text-mystical-100">{profileData.name}</h1>
+                      <motion.div
+                        className="bg-gradient-to-r from-amber-400 to-yellow-500 text-mystical-900 px-3 py-1 rounded-full text-sm font-medieval font-bold"
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        {gamificationData.title}
+                      </motion.div>
+                    </div>
+                    <EnchantedButton
+                      variant="secondary"
                       size="sm"
-                      className="border-white/20 text-white/80 hover:bg-white/10"
+                      onClick={() => setIsEditing(!isEditing)}
                     >
-                      <Edit size={16} className="mr-2" />
-                      {isEditing ? 'Cancel' : 'Edit'}
-                    </Button>
+                      <Edit size={16} />
+                      <span>{isEditing ? 'Seal Scroll' : 'Edit Chronicle'}</span>
+                    </EnchantedButton>
                   </div>
-                  <p className="text-white/70 mb-2">{profileData.bio}</p>
-                  <div className="flex items-center text-white/60 text-sm space-x-4">
+                  
+                  <p className="text-mystical-300 font-medieval mb-4">{profileData.bio}</p>
+                  
+                  <div className="flex items-center text-mystical-400 text-sm space-x-6 font-medieval">
                     <span className="flex items-center">
                       <MapPin size={14} className="mr-1" />
                       {profileData.location}
                     </span>
                     <span className="flex items-center">
-                      <Trophy size={14} className="mr-1" />
-                      Rank #{gamificationData.rank}
+                      <Crown size={14} className="mr-1 text-amber-400" />
+                      Heart Level {gamificationData.heartLevel}
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Contact Info */}
-              <div className="grid md:grid-cols-2 gap-4 mb-6">
-                <div>
-                  <Label className="text-white/80 mb-2 block">
-                    <Mail size={16} className="inline mr-2" />
-                    Email
-                  </Label>
-                  <Input
-                    value={profileData.email}
-                    disabled={!isEditing}
-                    onChange={(e) => setProfileData({...profileData, email: e.target.value})}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
-                  />
-                </div>
-                <div>
-                  <Label className="text-white/80 mb-2 block">
-                    <Phone size={16} className="inline mr-2" />
-                    Phone
-                  </Label>
-                  <Input
-                    value={profileData.phone}
-                    disabled={!isEditing}
-                    onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
-                  />
-                </div>
+              {/* Hero Stats Crystal Display */}
+              <div className="grid md:grid-cols-3 gap-4 mb-6">
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-gradient-to-br from-purple-600/30 to-mystical-700/30 rounded-xl p-4 border border-purple-400/20 text-center"
+                >
+                  <motion.div
+                    className="text-3xl font-bold text-purple-300 mb-1"
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    {gamificationData.questXP.toLocaleString()}
+                  </motion.div>
+                  <div className="text-sm text-mystical-400 font-medieval">Quest Experience</div>
+                </motion.div>
+                
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-gradient-to-br from-amber-600/30 to-yellow-700/30 rounded-xl p-4 border border-amber-400/20 text-center"
+                >
+                  <motion.div
+                    className="text-3xl font-bold text-amber-300 mb-1"
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                  >
+                    #{gamificationData.rank}
+                  </motion.div>
+                  <div className="text-sm text-mystical-400 font-medieval">Realm Ranking</div>
+                </motion.div>
+                
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-gradient-to-br from-emerald-600/30 to-green-700/30 rounded-xl p-4 border border-emerald-400/20 text-center"
+                >
+                  <motion.div
+                    className="text-3xl font-bold text-emerald-300 mb-1"
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                  >
+                    {gamificationData.badges.length}
+                  </motion.div>
+                  <div className="text-sm text-mystical-400 font-medieval">Sacred Gems</div>
+                </motion.div>
               </div>
 
-              {/* Skills */}
+              {/* Sacred Skills Runestones */}
               <div className="mb-6">
-                <Label className="text-white/80 mb-4 block text-lg">Skills</Label>
-                <div className="flex flex-wrap gap-2">
+                <Label className="text-mystical-200 mb-4 block text-lg font-medieval">⚡ Awakened Powers</Label>
+                <div className="flex flex-wrap gap-3">
                   {profileData.skills.map((skill, index) => (
                     <motion.div
                       key={skill}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: index * 0.1 }}
-                      whileHover={{ scale: 1.05 }}
-                      className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-medium"
+                      whileHover={{ scale: 1.05, rotate: 2 }}
+                      className="bg-gradient-to-r from-mystical-500 to-purple-500 text-white px-6 py-3 rounded-full font-medieval font-medium relative overflow-hidden"
                     >
-                      {skill}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        animate={{ x: ['-100%', '100%'] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                      />
+                      <span className="relative z-10">✨ {skill}</span>
                     </motion.div>
                   ))}
                 </div>
               </div>
 
-              {/* Preferences */}
+              {/* Mystical Preferences Altars */}
               <div>
-                <Label className="text-white/80 mb-4 block text-lg">Preferences</Label>
+                <Label className="text-mystical-200 mb-4 block text-lg font-medieval">🔮 Sacred Preferences</Label>
                 <div className="space-y-3">
                   {[
-                    { key: 'weekends', label: 'Available on weekends', icon: Calendar },
-                    { key: 'remote', label: 'Remote work preferred', icon: Settings },
-                    { key: 'evening', label: 'Evening activities', icon: Calendar }
+                    { key: 'weekends', label: 'Available during weekend rituals', icon: '🌙', description: 'Moonlit ceremonies and gatherings' },
+                    { key: 'remote', label: 'Remote astral projection work', icon: '🌌', description: 'Tasks performed from mystical distance' },
+                    { key: 'evening', label: 'Evening starlight activities', icon: '⭐', description: 'Under the guidance of celestial bodies' }
                   ].map((pref) => (
                     <motion.div
                       key={pref.key}
-                      whileHover={{ scale: 1.01 }}
-                      className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10"
+                      whileHover={{ scale: 1.01, x: 5 }}
+                      className="flex items-center justify-between p-4 bg-mystical-800/40 rounded-xl border border-mystical-600/30 backdrop-blur-sm"
                     >
-                      <div className="flex items-center space-x-3">
-                        <pref.icon size={18} className="text-blue-300" />
-                        <span className="text-white/80">{pref.label}</span>
+                      <div className="flex items-center space-x-4">
+                        <span className="text-2xl">{pref.icon}</span>
+                        <div>
+                          <div className="text-mystical-200 font-medieval">{pref.label}</div>
+                          <div className="text-xs text-mystical-400">{pref.description}</div>
+                        </div>
                       </div>
                       <Switch
                         checked={profileData.preferences[pref.key]}
@@ -200,127 +324,143 @@ const VolunteerProfile = () => {
                             ...profileData,
                             preferences: { ...profileData.preferences, [pref.key]: checked }
                           });
-                          setHasChanges(true);
                         }}
+                        className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-amber-400 data-[state=checked]:to-yellow-500"
                       />
                     </motion.div>
                   ))}
                 </div>
               </div>
-
-              {/* Save Button */}
-              {isEditing && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-6 flex justify-end"
-                >
-                  <Button
-                    onClick={handleSave}
-                    disabled={!hasChanges}
-                    className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:opacity-50"
-                  >
-                    Save Changes
-                  </Button>
-                </motion.div>
-              )}
             </div>
           </motion.div>
 
-          {/* Right Panel - Gamification Dashboard */}
+          {/* Mystical Achievements Codex */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4 }}
             className="space-y-6"
           >
-            {/* Points & Rank */}
-            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <Star className="mr-2 text-yellow-400" size={20} />
-                Your Progress
+            {/* Sacred Gems Collection */}
+            <div className="bg-mystical-900/60 backdrop-blur-xl rounded-3xl p-6 border border-purple-400/30">
+              <h3 className="text-xl font-fantasy text-mystical-100 mb-6 flex items-center">
+                <Gem className="mr-3 text-amber-400" size={24} />
+                Sacred Gem Collection
               </h3>
               
-              <div className="text-center mb-6">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", delay: 0.5 }}
-                  className="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent mb-2"
-                >
-                  {gamificationData.points.toLocaleString()}
-                </motion.div>
-                <p className="text-white/70">Total Points</p>
-                
-                <div className="mt-4 p-3 bg-white/5 rounded-xl">
-                  <div className="flex items-center justify-between text-sm text-white/80 mb-2">
-                    <span>Global Rank</span>
-                    <span className="font-semibold">#{gamificationData.rank}</span>
-                  </div>
-                  <Progress value={75} className="h-2" />
-                  <p className="text-xs text-white/60 mt-1">Next rank in 550 points</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Badges */}
-            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <Trophy className="mr-2 text-yellow-400" size={20} />
-                Achievements
-              </h3>
-              
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {gamificationData.badges.map((badge, index) => (
                   <motion.div
                     key={badge.name}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.6 + index * 0.1 }}
-                    whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.1)' }}
-                    className="flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 cursor-pointer group"
+                    whileHover={{ scale: 1.02 }}
+                    onHoverStart={() => setHoveredBadge(badge.name)}
+                    onHoverEnd={() => setHoveredBadge(null)}
+                    className="relative p-4 rounded-xl bg-gradient-to-r from-mystical-800/50 to-purple-800/50 border border-purple-400/20 cursor-pointer group overflow-hidden"
                   >
-                    <div className="text-2xl group-hover:scale-110 transition-transform">
-                      {badge.icon}
+                    <div className="flex items-center space-x-4">
+                      <FloatingGem type={badge.element as any} size="md" />
+                      <div className="flex-1">
+                        <div className="font-medieval text-mystical-100 font-semibold">{badge.name}</div>
+                        <div className="text-xs text-mystical-400">{badge.description}</div>
+                        {hoveredBadge === badge.name && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mt-2 text-xs text-amber-300 italic font-medieval"
+                          >
+                            "{badge.lore}"
+                          </motion.div>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <div className="font-medium text-white">{badge.name}</div>
-                      <div className="text-xs text-white/60">{badge.description}</div>
+                    
+                    {/* Magical Shimmer Effect */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/10 to-transparent"
+                      animate={{ x: ['-100%', '100%'] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Recent Quest Chronicles */}
+            <div className="bg-mystical-900/60 backdrop-blur-xl rounded-3xl p-6 border border-purple-400/30">
+              <h3 className="text-xl font-fantasy text-mystical-100 mb-6 flex items-center">
+                <Target className="mr-3 text-emerald-400" size={24} />
+                Recent Quest Chronicles
+              </h3>
+              
+              <div className="space-y-3">
+                {gamificationData.recentQuests.map((quest, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8 + index * 0.1 }}
+                    whileHover={{ x: 5 }}
+                    className={`p-4 rounded-xl bg-gradient-to-r ${getRarityColor(quest.rarity)}/20 border border-current/20 group`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="font-medieval text-mystical-100 text-sm font-semibold mb-1">{quest.task}</div>
+                        <div className="text-xs text-mystical-400 flex items-center space-x-2">
+                          <span>{quest.date}</span>
+                          <span className="w-1 h-1 bg-mystical-400 rounded-full"></span>
+                          <span className="capitalize font-medium">{quest.rarity}</span>
+                        </div>
+                      </div>
+                      <motion.div
+                        className="text-amber-400 font-bold text-lg flex items-center space-x-1"
+                        animate={{ scale: [1, 1.1, 1] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
+                      >
+                        <Sparkles size={16} />
+                        <span>+{quest.points}</span>
+                      </motion.div>
                     </div>
                   </motion.div>
                 ))}
               </div>
             </div>
 
-            {/* Recent Activities */}
-            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <Target className="mr-2 text-green-400" size={20} />
-                Recent Activities
+            {/* Heart Level Progress */}
+            <div className="bg-mystical-900/60 backdrop-blur-xl rounded-3xl p-6 border border-purple-400/30">
+              <h3 className="text-xl font-fantasy text-mystical-100 mb-6 flex items-center">
+                <Star className="mr-3 text-yellow-400" size={24} />
+                Heart Level Progress
               </h3>
               
-              <div className="space-y-3">
-                {gamificationData.recentActivities.map((activity, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8 + index * 0.1 }}
-                    className="flex items-center justify-between p-3 bg-white/5 rounded-xl"
-                  >
-                    <div className="flex-1">
-                      <div className="font-medium text-white text-sm">{activity.task}</div>
-                      <div className="text-xs text-white/60">{activity.date}</div>
-                    </div>
-                    <div className="text-green-400 font-semibold">+{activity.points}</div>
-                  </motion.div>
-                ))}
+              <div className="text-center mb-4">
+                <motion.div
+                  className="text-4xl font-fantasy font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent mb-2"
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  Level {gamificationData.heartLevel}
+                </motion.div>
+                <p className="text-mystical-400 font-medieval text-sm">Path to Legendary Hero</p>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between text-sm text-mystical-400 mb-2 font-medieval">
+                    <span>Current Heart Energy</span>
+                    <span>{gamificationData.questXP}/3000</span>
+                  </div>
+                  <Progress value={(gamificationData.questXP / 3000) * 100} className="h-3 bg-mystical-800/50" />
+                  <p className="text-xs text-mystical-500 mt-1 font-medieval">550 XP to next Heart Level</p>
+                </div>
               </div>
             </div>
           </motion.div>
         </motion.div>
       </div>
-    </div>
+    </MysticalBackground>
   );
 };
 
