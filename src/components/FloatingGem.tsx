@@ -36,6 +36,16 @@ const FloatingGem: React.FC<FloatingGemProps> = ({
     lg: 'w-16 h-16',
   };
 
+  const getGlowColor = (gemType: string) => {
+    switch (gemType) {
+      case 'sapphire': return '#3b82f6';
+      case 'emerald': return '#10b981';
+      case 'ruby': return '#ef4444';
+      case 'diamond': return '#6b7280';
+      default: return '#6b7280';
+    }
+  };
+
   return (
     <motion.div
       className={`relative ${sizes[size]} ${className}`}
@@ -75,9 +85,9 @@ const FloatingGem: React.FC<FloatingGemProps> = ({
         className="absolute inset-0 rounded-full"
         animate={{
           boxShadow: [
-            `0 0 20px ${type === 'sapphire' ? '#3b82f6' : type === 'emerald' ? '#10b981' : type === 'ruby' ? '#ef4444' : '#6b7280'}40`,
-            `0 0 40px ${type === 'sapphire' ? '#3b82f6' : type === 'emerald' ? '#10b981' : type === 'ruby' ? '#ef4444' : '#6b7280'}60`,
-            `0 0 20px ${type === 'sapphire' ? '#3b82f6' : type === 'emerald' ? '#10b981' : type === 'ruby' : '#ef4444' : '#6b7280'}40`,
+            `0 0 20px ${getGlowColor(type)}40`,
+            `0 0 40px ${getGlowColor(type)}60`,
+            `0 0 20px ${getGlowColor(type)}40`,
           ]
         }}
         transition={{ duration: 2, repeat: Infinity }}
