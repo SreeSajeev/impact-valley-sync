@@ -1,239 +1,435 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Users, Target, Calendar, TrendingUp, Search, Filter, MoreHorizontal, CheckCircle, Clock, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+import { ArrowLeft, Users, BookOpen, Eye, MessageCircle, TrendingUp, Globe, Settings, Plus, Crown, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Progress } from '@/components/ui/progress';
-import VideoBackground from '@/components/VideoBackground';
-import Navigation from '@/components/Navigation';
+import MysticalBackground from '@/components/MysticalBackground';
+import MysticalOrb from '@/components/MysticalOrb';
+import FloatingGem from '@/components/FloatingGem';
+import EnchantedButton from '@/components/EnchantedButton';
 
 const NGODashboard = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  
-  const stats = [
-    { label: 'Active Tasks', value: 12, change: '+3', color: 'from-blue-500 to-blue-600', icon: Target },
-    { label: 'Active Volunteers', value: 156, change: '+24', color: 'from-green-500 to-green-600', icon: Users },
-    { label: 'Completed Tasks', value: 47, change: '+8', color: 'from-purple-500 to-purple-600', icon: CheckCircle },
-    { label: 'This Month', value: 89, change: '+12%', color: 'from-orange-500 to-orange-600', icon: Calendar }
-  ];
+  const [selectedTimeframe, setSelectedTimeframe] = useState('week');
+  const [newMessages, setNewMessages] = useState(3);
 
-  const recentTasks = [
+  const guildData = {
+    name: 'Guardians of the Green Realm',
+    guildMaster: 'Elena Natureweaver',
+    totalHeroes: 312,
+    activeQuests: 8,
+    completedQuests: 47,
+    gemsDistributed: 8750,
+    realmsProtected: 12,
+    monthlyGrowth: 23
+  };
+
+  const activeQuests = [
     {
       id: 1,
-      title: "Beach Cleanup Drive",
+      title: 'Enchanted Forest Restoration',
       volunteers: 15,
-      maxVolunteers: 20,
-      status: "active",
-      deadline: "2024-01-15",
-      priority: "high",
-      applications: 8
+      maxVolunteers: 25,
+      priority: 'high',
+      status: 'active',
+      applications: 8,
+      completion: 60
     },
     {
       id: 2,
-      title: "Teaching Mathematics",
+      title: 'Crystal Lake Purification',
       volunteers: 8,
-      maxVolunteers: 10,
-      status: "recruiting",
-      deadline: "2024-01-20",
-      priority: "medium",
-      applications: 12
+      maxVolunteers: 12,
+      priority: 'medium',
+      status: 'active',
+      applications: 3,
+      completion: 40
     },
     {
       id: 3,
-      title: "Food Distribution",
-      volunteers: 15,
-      maxVolunteers: 15,
-      status: "completed",
-      deadline: "2024-01-10",
-      priority: "high",
-      applications: 0
+      title: 'Mystical Garden Tending',
+      volunteers: 3,
+      maxVolunteers: 8,
+      priority: 'low',
+      status: 'recruiting',
+      applications: 12,
+      completion: 15
     }
   ];
 
-  const skillData = [
-    { skill: 'Environmental', volunteers: 45, tasks: 8 },
-    { skill: 'Teaching', volunteers: 32, tasks: 6 },
-    { skill: 'Healthcare', volunteers: 28, tasks: 4 },
-    { skill: 'Community Service', volunteers: 51, tasks: 9 }
+  const recentApplications = [
+    {
+      id: 1,
+      volunteerName: 'Kai Earthsong',
+      questTitle: 'Forest Restoration',
+      avatar: '🌱',
+      level: 12,
+      timeAgo: '2 hours ago',
+      skills: ['Environmental Magic', 'Healing Arts']
+    },
+    {
+      id: 2,
+      volunteerName: 'Zara Stormcaller',
+      questTitle: 'Lake Purification',
+      avatar: '💧',
+      level: 18,
+      timeAgo: '4 hours ago',
+      skills: ['Water Magic', 'Leadership']
+    },
+    {
+      id: 3,
+      volunteerName: 'Felix Brightleaf',
+      questTitle: 'Garden Tending',
+      avatar: '🍃',
+      level: 8,
+      timeAgo: '6 hours ago',
+      skills: ['Plant Magic', 'Teaching']
+    }
   ];
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'active': return 'bg-green-500';
-      case 'recruiting': return 'bg-yellow-500';
-      case 'completed': return 'bg-blue-500';
-      default: return 'bg-gray-500';
+  const impactMetrics = {
+    thisWeek: {
+      newVolunteers: 23,
+      questsCompleted: 7,
+      hoursVolunteered: 156,
+      gemsAwarded: 425
+    },
+    thisMonth: {
+      newVolunteers: 89,
+      questsCompleted: 24,
+      hoursVolunteered: 672,
+      gemsAwarded: 1850
     }
   };
 
-  const getPriorityColor = (priority) => {
+  const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return 'text-red-400';
-      case 'medium': return 'text-yellow-400';
-      case 'low': return 'text-green-400';
-      default: return 'text-gray-400';
+      case 'high': return 'text-red-400 bg-red-400/20';
+      case 'medium': return 'text-amber-400 bg-amber-400/20';
+      case 'low': return 'text-emerald-400 bg-emerald-400/20';
+      default: return 'text-gray-400 bg-gray-400/20';
     }
+  };
+
+  const handleMessageOwl = () => {
+    setNewMessages(0);
+    // Open messaging interface
+  };
+
+  const getCurrentMetrics = () => {
+    return selectedTimeframe === 'week' ? impactMetrics.thisWeek : impactMetrics.thisMonth;
   };
 
   return (
-    <div className="min-h-screen relative">
-      <VideoBackground src="/assets/bg.mp4" />
-      <Navigation />
-      
-      <div className="container mx-auto px-4 py-8 mt-16">
-        {/* Header */}
+    <MysticalBackground variant="control-tower">
+      {/* Return Portal */}
+      <Link
+        to="/"
+        className="absolute top-6 left-6 z-10 flex items-center space-x-2 text-mystical-200 hover:text-amber-400 transition-all duration-300"
+      >
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between mb-8"
+          whileHover={{ x: -4, scale: 1.1 }}
+          className="flex items-center space-x-2 font-medieval"
         >
-          <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-green-100 bg-clip-text text-transparent mb-2">
-              NGO Dashboard
-            </h1>
-            <p className="text-white/70">Manage your organization and volunteers</p>
-          </div>
-          
-          <motion.div
-            whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(59, 130, 246, 0.3)" }}
-            whileTap={{ scale: 0.95 }}
+          <ArrowLeft size={20} />
+          <span>Return to Realm</span>
+        </motion.div>
+      </Link>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Control Tower Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <motion.h1
+            className="text-5xl font-fantasy font-bold bg-gradient-to-r from-cyan-300 via-blue-300 to-mystical-300 bg-clip-text text-transparent mb-4"
+            animate={{
+              textShadow: [
+                '0 0 20px rgba(34, 211, 238, 0.5)',
+                '0 0 40px rgba(34, 211, 238, 0.8)',
+                '0 0 20px rgba(34, 211, 238, 0.5)'
+              ]
+            }}
+            transition={{ duration: 4, repeat: Infinity }}
           >
-            <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg">
-              <Plus size={20} className="mr-2" />
-              Create New Task
-            </Button>
-          </motion.div>
+            The Guild Control Tower
+          </motion.h1>
+          <motion.p
+            className="text-xl text-mystical-200 font-medieval"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            Command the Forces of Kindness, Master {guildData.guildMaster}
+          </motion.p>
         </motion.div>
 
-        {/* Stats Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-        >
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * index }}
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 group"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <motion.div
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center`}
-                >
-                  <stat.icon className="text-white" size={24} />
-                </motion.div>
-                <span className="text-green-400 text-sm font-medium">{stat.change}</span>
-              </div>
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.3 + index * 0.1, type: "spring" }}
-                className="text-3xl font-bold text-white mb-1"
-              >
-                {stat.value}
-              </motion.div>
-              <p className="text-white/70 text-sm">{stat.label}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Recent Assignments */}
+        <div className="grid lg:grid-cols-4 gap-6">
+          {/* Guild Status Orb */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-            className="lg:col-span-2"
+            className="lg:col-span-1 space-y-6"
           >
-            <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 overflow-hidden">
-              <div className="p-6 border-b border-white/10">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold text-white">Recent Tasks</h3>
-                  <div className="flex items-center space-x-2">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50" size={16} />
-                      <Input
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search tasks..."
-                        className="pl-9 w-64 bg-white/10 border-white/20 text-white placeholder:text-white/30"
-                      />
-                    </div>
-                    <Button variant="outline" size="sm" className="border-white/20 text-white/80 hover:bg-white/10">
-                      <Filter size={16} />
-                    </Button>
+            {/* Guild Master Panel */}
+            <div className="bg-mystical-900/60 backdrop-blur-xl rounded-3xl p-6 border border-cyan-400/30">
+              <div className="text-center mb-6">
+                <motion.div
+                  className="relative mx-auto mb-4"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <div className="w-24 h-24 bg-gradient-to-br from-cyan-400 via-blue-500 to-mystical-500 rounded-full flex items-center justify-center text-2xl font-bold text-white relative mx-auto">
+                    <div className="absolute inset-2 bg-gradient-to-br from-white/20 to-transparent rounded-full" />
+                    <span className="relative z-10">🏰</span>
+                    
+                    {/* Guild Master Crown */}
+                    <motion.div
+                      className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-2xl"
+                      animate={{ 
+                        y: [-2, 2, -2],
+                        rotate: [0, 5, -5, 0]
+                      }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    >
+                      👑
+                    </motion.div>
                   </div>
+                  
+                  {/* Power Ring */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full border-4 border-cyan-400/30"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  />
+                </motion.div>
+
+                <h3 className="text-xl font-fantasy text-mystical-100 font-semibold">{guildData.name}</h3>
+                <div className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white px-3 py-1 rounded-full text-sm font-medieval font-bold mb-2 inline-block">
+                  Guild Master
+                </div>
+                <div className="text-mystical-400 font-medieval text-sm">{guildData.guildMaster}</div>
+              </div>
+
+              {/* Guild Stats */}
+              <div className="space-y-3 text-sm font-medieval">
+                <div className="flex justify-between">
+                  <span className="text-mystical-400">Active Heroes</span>
+                  <span className="text-cyan-400 font-bold">{guildData.totalHeroes}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-mystical-400">Active Quests</span>
+                  <span className="text-emerald-400 font-bold">{guildData.activeQuests}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-mystical-400">Realms Protected</span>
+                  <span className="text-purple-400 font-bold">{guildData.realmsProtected}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-mystical-400">Monthly Growth</span>
+                  <span className="text-amber-400 font-bold">+{guildData.monthlyGrowth}%</span>
                 </div>
               </div>
+            </div>
+
+            {/* Messaging Owl */}
+            <motion.div
+              className="bg-mystical-900/60 backdrop-blur-xl rounded-3xl p-6 border border-cyan-400/30 cursor-pointer"
+              whileHover={{ scale: 1.02 }}
+              onClick={handleMessageOwl}
+            >
+              <h3 className="text-lg font-fantasy text-mystical-100 mb-4 flex items-center">
+                <MessageCircle className="mr-2 text-cyan-400" size={20} />
+                Mystical Messenger
+              </h3>
               
-              <div className="divide-y divide-white/10">
-                {recentTasks.map((task, index) => (
+              <div className="text-center">
+                <motion.div
+                  className="text-6xl mb-3"
+                  animate={{ 
+                    y: [-5, 5, -5],
+                    rotate: [0, 2, -2, 0]
+                  }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                >
+                  🦉
+                </motion.div>
+                
+                {newMessages > 0 && (
                   <motion.div
-                    key={task.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 + index * 0.1 }}
-                    whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)' }}
-                    className="p-6 transition-all duration-300 group"
+                    className="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold mx-auto mb-2"
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h4 className="font-semibold text-white group-hover:text-blue-300 transition-colors">
-                            {task.title}
-                          </h4>
-                          <Badge className={`${getStatusColor(task.status)} text-white text-xs`}>
-                            {task.status}
-                          </Badge>
-                          <span className={`text-xs ${getPriorityColor(task.priority)}`}>
-                            {task.priority} priority
+                    {newMessages}
+                  </motion.div>
+                )}
+                
+                <p className="text-mystical-400 font-medieval text-sm">
+                  {newMessages > 0 ? `${newMessages} new scrolls await` : 'No new messages'}
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Quick Actions */}
+            <div className="space-y-3">
+              <EnchantedButton variant="mystical" className="w-full">
+                <Plus size={16} />
+                <span>Summon New Quest</span>
+              </EnchantedButton>
+              
+              <EnchantedButton variant="secondary" className="w-full">
+                <Settings size={16} />
+                <span>Guild Settings</span>
+              </EnchantedButton>
+            </div>
+          </motion.div>
+
+          {/* Main Control Console */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="lg:col-span-2 space-y-6"
+          >
+            {/* Impact Visualization Crystal */}
+            <div className="bg-mystical-900/60 backdrop-blur-xl rounded-3xl p-8 border border-cyan-400/30">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-fantasy text-mystical-100 flex items-center">
+                  <TrendingUp className="mr-3 text-cyan-400" size={24} />
+                  Impact Crystal Timeline
+                </h2>
+                
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => setSelectedTimeframe('week')}
+                    className={`px-4 py-2 rounded-full font-medieval text-sm transition-all ${
+                      selectedTimeframe === 'week'
+                        ? 'bg-cyan-400/20 text-cyan-300 border border-cyan-400/50'
+                        : 'text-mystical-400 hover:text-cyan-300'
+                    }`}
+                  >
+                    This Week
+                  </button>
+                  <button
+                    onClick={() => setSelectedTimeframe('month')}
+                    className={`px-4 py-2 rounded-full font-medieval text-sm transition-all ${
+                      selectedTimeframe === 'month'
+                        ? 'bg-cyan-400/20 text-cyan-300 border border-cyan-400/50'
+                        : 'text-mystical-400 hover:text-cyan-300'
+                    }`}
+                  >
+                    This Month
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-4 gap-4 mb-6">
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-gradient-to-br from-emerald-600/30 to-green-700/30 rounded-xl p-4 border border-emerald-400/20 text-center"
+                >
+                  <Users className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-emerald-300 font-fantasy">{getCurrentMetrics().newVolunteers}</div>
+                  <div className="text-sm text-mystical-400 font-medieval">New Heroes</div>
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-gradient-to-br from-amber-600/30 to-yellow-700/30 rounded-xl p-4 border border-amber-400/20 text-center"
+                >
+                  <BookOpen className="w-8 h-8 text-amber-400 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-amber-300 font-fantasy">{getCurrentMetrics().questsCompleted}</div>
+                  <div className="text-sm text-mystical-400 font-medieval">Quests Completed</div>
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-gradient-to-br from-purple-600/30 to-mystical-700/30 rounded-xl p-4 border border-purple-400/20 text-center"
+                >
+                  <Globe className="w-8 h-8 text-purple-400 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-purple-300 font-fantasy">{getCurrentMetrics().hoursVolunteered}</div>
+                  <div className="text-sm text-mystical-400 font-medieval">Hours of Service</div>
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-gradient-to-br from-cyan-600/30 to-blue-700/30 rounded-xl p-4 border border-cyan-400/20 text-center"
+                >
+                  <Sparkles className="w-8 h-8 text-cyan-400 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-cyan-300 font-fantasy">{getCurrentMetrics().gemsAwarded}</div>
+                  <div className="text-sm text-mystical-400 font-medieval">Gems Awarded</div>
+                </motion.div>
+              </div>
+            </div>
+
+            {/* Quest Management Console */}
+            <div className="bg-mystical-900/60 backdrop-blur-xl rounded-3xl p-8 border border-cyan-400/30">
+              <h2 className="text-2xl font-fantasy text-mystical-100 mb-6 flex items-center">
+                <BookOpen className="mr-3 text-cyan-400" size={24} />
+                Active Quest Scrolls
+              </h2>
+
+              <div className="space-y-4">
+                {activeQuests.map((quest, index) => (
+                  <motion.div
+                    key={quest.id}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 + index * 0.1 }}
+                    whileHover={{ scale: 1.01, x: 5 }}
+                    className="bg-mystical-800/40 rounded-xl p-6 border border-cyan-400/20 relative overflow-hidden group"
+                  >
+                    {/* Magical shimmer */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent"
+                      animate={{ x: ['-100%', '100%'] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    />
+
+                    <div className="relative z-10">
+                      <div className="flex justify-between items-start mb-3">
+                        <h3 className="text-lg font-fantasy text-mystical-100 font-semibold">{quest.title}</h3>
+                        <div className="flex items-center space-x-2">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medieval capitalize ${getPriorityColor(quest.priority)}`}>
+                            {quest.priority}
                           </span>
-                        </div>
-                        
-                        <div className="flex items-center space-x-6 text-sm text-white/60">
-                          <span className="flex items-center">
-                            <Users size={14} className="mr-1" />
-                            {task.volunteers}/{task.maxVolunteers} volunteers
+                          <span className="bg-cyan-400/20 text-cyan-300 px-2 py-1 rounded-full text-xs font-medieval">
+                            {quest.status}
                           </span>
-                          <span className="flex items-center">
-                            <Calendar size={14} className="mr-1" />
-                            {task.deadline}
-                          </span>
-                          {task.applications > 0 && (
-                            <span className="flex items-center text-blue-400">
-                              <AlertCircle size={14} className="mr-1" />
-                              {task.applications} new applications
-                            </span>
-                          )}
-                        </div>
-                        
-                        <div className="mt-3">
-                          <Progress 
-                            value={(task.volunteers / task.maxVolunteers) * 100} 
-                            className="h-2" 
-                          />
                         </div>
                       </div>
-                      
-                      <div className="flex items-center space-x-2 ml-4">
-                        <Button variant="outline" size="sm" className="border-white/20 text-white/80 hover:bg-white/10">
-                          View
-                        </Button>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-all"
-                        >
-                          <MoreHorizontal size={16} />
-                        </motion.button>
+
+                      <div className="grid md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                          <div className="text-mystical-400 text-sm font-medieval mb-1">Heroes Assigned</div>
+                          <div className="text-mystical-200 font-bold">{quest.volunteers}/{quest.maxVolunteers}</div>
+                          <Progress value={(quest.volunteers / quest.maxVolunteers) * 100} className="h-2 mt-1" />
+                        </div>
+                        <div>
+                          <div className="text-mystical-400 text-sm font-medieval mb-1">Applications</div>
+                          <div className="text-amber-400 font-bold flex items-center">
+                            <Eye size={16} className="mr-1" />
+                            {quest.applications}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-mystical-400 text-sm font-medieval mb-1">Completion</div>
+                          <div className="text-emerald-400 font-bold">{quest.completion}%</div>
+                          <Progress value={quest.completion} className="h-2 mt-1" />
+                        </div>
+                      </div>
+
+                      <div className="flex space-x-3">
+                        <EnchantedButton variant="secondary" size="sm">
+                          <Eye size={16} />
+                          <span>View Details</span>
+                        </EnchantedButton>
+                        <EnchantedButton variant="mystical" size="sm">
+                          <Users size={16} />
+                          <span>Manage Heroes</span>
+                        </EnchantedButton>
                       </div>
                     </div>
                   </motion.div>
@@ -242,104 +438,122 @@ const NGODashboard = () => {
             </div>
           </motion.div>
 
-          {/* Analytics & Skill Distribution */}
+          {/* Hero Applications & Guild Insights */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 }}
-            className="space-y-6"
+            transition={{ delay: 0.3 }}
+            className="lg:col-span-1 space-y-6"
           >
-            {/* Quick Actions */}
-            <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
-              <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
-              <div className="space-y-3">
-                {[
-                  { label: 'View Applications', count: 12, color: 'bg-blue-500' },
-                  { label: 'Pending Reviews', count: 5, color: 'bg-yellow-500' },
-                  { label: 'Messages', count: 8, color: 'bg-green-500' }
-                ].map((action, index) => (
-                  <motion.button
-                    key={action.label}
-                    whileHover={{ scale: 1.02, x: 5 }}
-                    className="w-full flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-300"
-                  >
-                    <span className="text-white/80">{action.label}</span>
-                    <div className="flex items-center space-x-2">
-                      <span className={`${action.color} text-white text-xs px-2 py-1 rounded-full`}>
-                        {action.count}
-                      </span>
-                      <span className="text-white/60">→</span>
-                    </div>
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-
-            {/* Skill Distribution */}
-            <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <TrendingUp className="mr-2" size={20} />
-                Volunteer Skills
+            {/* Recent Applications */}
+            <div className="bg-mystical-900/60 backdrop-blur-xl rounded-3xl p-6 border border-cyan-400/30">
+              <h3 className="text-lg font-fantasy text-mystical-100 mb-4 flex items-center">
+                <Users className="mr-2 text-cyan-400" size={20} />
+                Hero Applications
               </h3>
-              <div className="space-y-4">
-                {skillData.map((item, index) => (
+              
+              <div className="space-y-3">
+                {recentApplications.map((application, index) => (
                   <motion.div
-                    key={item.skill}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.8 + index * 0.1 }}
-                    className="group"
+                    key={application.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 + index * 0.1 }}
+                    whileHover={{ x: 5 }}
+                    className="bg-mystical-800/40 rounded-lg p-3 cursor-pointer group"
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-white/80 font-medium">{item.skill}</span>
-                      <span className="text-white/60 text-sm">{item.volunteers} volunteers</span>
+                    <div className="flex items-center space-x-3 mb-2">
+                      <div className="text-xl">{application.avatar}</div>
+                      <div className="flex-1">
+                        <div className="text-mystical-200 font-medieval text-sm font-semibold">{application.volunteerName}</div>
+                        <div className="text-mystical-400 text-xs">Level {application.level} • {application.timeAgo}</div>
+                      </div>
                     </div>
-                    <div className="relative">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${(item.volunteers / 60) * 100}%` }}
-                        transition={{ delay: 1 + index * 0.1, duration: 1 }}
-                        className="h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full"
-                      />
-                      <div className="absolute top-0 left-0 w-full h-2 bg-white/10 rounded-full -z-10" />
+                    <div className="text-xs text-mystical-400 font-medieval mb-2">
+                      Applied for: {application.questTitle}
                     </div>
-                    <p className="text-xs text-white/50 mt-1">{item.tasks} active tasks</p>
+                    <div className="flex flex-wrap gap-1">
+                      {application.skills.map((skill) => (
+                        <span key={skill} className="bg-cyan-400/20 text-cyan-300 px-2 py-1 rounded text-xs font-medieval">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                   </motion.div>
                 ))}
               </div>
+              
+              <EnchantedButton variant="mystical" size="sm" className="w-full mt-4">
+                <Eye size={16} />
+                <span>Review All Applications</span>
+              </EnchantedButton>
             </div>
 
-            {/* Monthly Progress */}
-            <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
-              <h3 className="text-lg font-semibold text-white mb-4">Monthly Progress</h3>
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-sm text-white/80 mb-1">
-                    <span>Tasks Completed</span>
-                    <span>12/15</span>
-                  </div>
-                  <Progress value={80} className="h-2" />
+            {/* Guild Gem Vault */}
+            <div className="bg-mystical-900/60 backdrop-blur-xl rounded-3xl p-6 border border-cyan-400/30">
+              <h3 className="text-lg font-fantasy text-mystical-100 mb-4 flex items-center">
+                <Crown className="mr-2 text-cyan-400" size={20} />
+                Guild Gem Vault
+              </h3>
+              
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="text-center">
+                  <FloatingGem type="sapphire" size="md" />
+                  <div className="text-mystical-400 font-medieval text-xs mt-2">Wisdom</div>
                 </div>
-                <div>
-                  <div className="flex justify-between text-sm text-white/80 mb-1">
-                    <span>Volunteer Goal</span>
-                    <span>156/200</span>
-                  </div>
-                  <Progress value={78} className="h-2" />
+                <div className="text-center">
+                  <FloatingGem type="emerald" size="md" />
+                  <div className="text-mystical-400 font-medieval text-xs mt-2">Growth</div>
                 </div>
-                <div>
-                  <div className="flex justify-between text-sm text-white/80 mb-1">
-                    <span>Impact Score</span>
-                    <span>9.2/10</span>
+              </div>
+              
+              <div className="text-center">
+                <MysticalOrb color="cyan" size="sm">
+                  <div className="text-center">
+                    <div className="text-lg font-bold">{(guildData.gemsDistributed / 1000).toFixed(1)}K</div>
+                    <div className="text-xs">Distributed</div>
                   </div>
-                  <Progress value={92} className="h-2" />
+                </MysticalOrb>
+              </div>
+            </div>
+
+            {/* Guild Performance */}
+            <div className="bg-mystical-900/60 backdrop-blur-xl rounded-3xl p-6 border border-cyan-400/30">
+              <h3 className="text-lg font-fantasy text-mystical-100 mb-4 flex items-center">
+                <TrendingUp className="mr-2 text-cyan-400" size={20} />
+                Guild Performance
+              </h3>
+              
+              <div className="space-y-3">
+                <div>
+                  <div className="flex justify-between text-sm font-medieval mb-1">
+                    <span className="text-mystical-300">Hero Satisfaction</span>
+                    <span className="text-emerald-400 font-bold">94%</span>
+                  </div>
+                  <Progress value={94} className="h-2 bg-mystical-800/50" />
+                </div>
+                
+                <div>
+                  <div className="flex justify-between text-sm font-medieval mb-1">
+                    <span className="text-mystical-300">Quest Success Rate</span>
+                    <span className="text-amber-400 font-bold">87%</span>
+                  </div>
+                  <Progress value={87} className="h-2 bg-mystical-800/50" />
+                </div>
+                
+                <div>
+                  <div className="flex justify-between text-sm font-medieval mb-1">
+                    <span className="text-mystical-300">Monthly Growth</span>
+                    <span className="text-cyan-400 font-bold">+{guildData.monthlyGrowth}%</span>
+                  </div>
+                  <Progress value={guildData.monthlyGrowth * 2} className="h-2 bg-mystical-800/50" />
                 </div>
               </div>
             </div>
           </motion.div>
         </div>
       </div>
-    </div>
+    </MysticalBackground>
   );
 };
 
