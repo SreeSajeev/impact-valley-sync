@@ -12,7 +12,7 @@ import NGOProfile from "./pages/NGOProfile";
 import VolunteerDashboard from "./pages/VolunteerDashboard";
 import NGODashboard from "./pages/NGODashboard";
 import NotFound from "./pages/NotFound";
-import CursorTrail from "./components/CursorTrail";
+import MagicalCursor from "./components/MagicalCursor";
 
 const queryClient = new QueryClient();
 
@@ -21,7 +21,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <CursorTrail />
+      <MagicalCursor />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
