@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { gem } from 'lucide-react';
+import { Gem } from 'lucide-react';
 
 interface FloatingGemProps {
   type: 'sapphire' | 'emerald' | 'ruby' | 'diamond';
@@ -77,7 +77,7 @@ const FloatingGem: React.FC<FloatingGemProps> = ({
           boxShadow: [
             `0 0 20px ${type === 'sapphire' ? '#3b82f6' : type === 'emerald' ? '#10b981' : type === 'ruby' ? '#ef4444' : '#6b7280'}40`,
             `0 0 40px ${type === 'sapphire' ? '#3b82f6' : type === 'emerald' ? '#10b981' : type === 'ruby' ? '#ef4444' : '#6b7280'}60`,
-            `0 0 20px ${type === 'sapphire' ? '#3b82f6' : type === 'emerald' ? '#10b981' : type === 'ruby' ? '#ef4444' : '#6b7280'}40`,
+            `0 0 20px ${type === 'sapphire' ? '#3b82f6' : type === 'emerald' ? '#10b981' : type === 'ruby' : '#ef4444' : '#6b7280'}40`,
           ]
         }}
         transition={{ duration: 2, repeat: Infinity }}

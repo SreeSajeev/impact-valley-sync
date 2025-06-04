@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { menu, home, compass, gem, users, book } from 'lucide-react';
+import { Menu, Home, Compass, Gem, Users, Book } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Navigation = () => {
@@ -53,11 +53,11 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {[
-              { to: "/", label: "Home", icon: home },
-              { to: "/quests", label: "Quests", icon: compass },
-              { to: "/gems", label: "Gems & Badges", icon: gem },
-              { to: "/leaderboard", label: "Leaderboard", icon: users },
-              { to: "/guild-masters", label: "For Guild Masters", icon: book },
+              { to: "/", label: "Home", icon: Home },
+              { to: "/quests", label: "Quests", icon: Compass },
+              { to: "/gems", label: "Gems & Badges", icon: Gem },
+              { to: "/leaderboard", label: "Leaderboard", icon: Users },
+              { to: "/guild-masters", label: "For Guild Masters", icon: Book },
             ].map((item, index) => (
               <motion.div
                 key={item.to}
@@ -114,7 +114,7 @@ const Navigation = () => {
               animate={{ rotate: isMobileMenuOpen ? 180 : 0 }}
               transition={{ duration: 0.3 }}
             >
-              <menu size={24} />
+              <Menu size={24} />
             </motion.div>
           </motion.button>
         </div>
@@ -131,11 +131,11 @@ const Navigation = () => {
         >
           <div className="px-2 pt-2 pb-3 space-y-1">
             {[
-              { to: "/", label: "Home", icon: home },
-              { to: "/quests", label: "Quests", icon: compass },
-              { to: "/gems", label: "Gems & Badges", icon: gem },
-              { to: "/leaderboard", label: "Leaderboard", icon: users },
-              { to: "/guild-masters", label: "For Guild Masters", icon: book },
+              { to: "/", label: "Home", icon: Home },
+              { to: "/quests", label: "Quests", icon: Compass },
+              { to: "/gems", label: "Gems & Badges", icon: Gem },
+              { to: "/leaderboard", label: "Leaderboard", icon: Users },
+              { to: "/guild-masters", label: "For Guild Masters", icon: Book },
             ].map((item) => (
               <Link 
                 key={item.to}

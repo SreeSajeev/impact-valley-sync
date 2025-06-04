@@ -1,10 +1,11 @@
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import VideoBackground from './VideoBackground';
 import EnchantedButton from './EnchantedButton';
 import FloatingGem from './FloatingGem';
 import { motion } from 'framer-motion';
-import { wand_sparkles, compass } from 'lucide-react';
+import { WandSparkles, Compass } from 'lucide-react';
 
 const HeroSection = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -139,14 +140,14 @@ const HeroSection = () => {
         >
           <Link to="/volunteer-signup">
             <EnchantedButton variant="mystical" size="lg" className="group">
-              <wand_sparkles className="group-hover:animate-pulse" size={20} />
+              <WandSparkles className="group-hover:animate-pulse" size={20} />
               <span>Begin Your Quest</span>
             </EnchantedButton>
           </Link>
 
           <Link to="/ngo-signup">
             <EnchantedButton variant="forest" size="lg" className="group">
-              <compass className="group-hover:animate-pulse" size={20} />
+              <Compass className="group-hover:animate-pulse" size={20} />
               <span>Guild Masters</span>
             </EnchantedButton>
           </Link>
