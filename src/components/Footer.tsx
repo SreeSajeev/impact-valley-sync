@@ -1,20 +1,20 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Star } from 'lucide-react';
+import { Heart, Star, Sparkles, Shield, Scroll } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="relative bg-slate-900 overflow-hidden">
-      {/* Starry Night Background */}
+    <footer className="relative bg-mystical-950 overflow-hidden">
+      {/* Mystical Night Background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-950" />
+        <div className="absolute inset-0 bg-gradient-to-b from-mystical-900 to-mystical-950" />
         
-        {/* Twinkling Stars */}
-        {[...Array(50)].map((_, i) => (
+        {/* Floating Mystical Particles */}
+        {[...Array(30)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
+            className="absolute w-1 h-1 bg-mystical-400 rounded-full animate-pulse"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -24,85 +24,132 @@ const Footer = () => {
           />
         ))}
 
-        {/* Mountain Silhouettes */}
-        <div className="absolute bottom-0 w-full">
-          <svg viewBox="0 0 1200 200" className="w-full h-32 text-slate-800 fill-current">
-            <path d="M0,200 L0,100 L200,50 L400,80 L600,40 L800,70 L1000,30 L1200,60 L1200,200 Z" />
-          </svg>
+        {/* Ancient Runes Pattern */}
+        <div className="absolute bottom-0 w-full h-32 opacity-10">
+          <div className="flex justify-around items-end h-full text-mystical-400 text-4xl">
+            {['ᚱ', 'ᚢ', 'ᚾ', 'ᛁ', 'ᚲ', 'ᛋ', 'ᛏ', 'ᚨ', 'ᚠ', 'ᚦ'].map((rune, i) => (
+              <div key={i} className="animate-pulse" style={{ animationDelay: `${i * 0.2}s` }}>
+                {rune}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-          {/* Logo & Description */}
+          {/* Mystical Logo & Description */}
           <div className="md:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-teal-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">S</span>
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-mystical-400 via-mystical-500 to-ember-500 rounded-xl flex items-center justify-center shadow-lg shadow-mystical-500/30">
+                <span className="text-white font-fantasy font-bold text-xl">S</span>
               </div>
-              <span className="text-white font-bold text-2xl">SkillSync</span>
+              <span className="text-white font-fantasy font-bold text-2xl tracking-wide">SkillSync</span>
+              <Sparkles className="w-6 h-6 text-mystical-400 animate-pulse" />
             </div>
-            <p className="text-blue-200 mb-6 max-w-md leading-relaxed">
-              Connecting passionate volunteers with meaningful opportunities to create lasting impact in their communities through AI-powered matching.
+            <p className="text-mystical-200 mb-6 max-w-md leading-relaxed font-medieval">
+              Where hearts unite across mystical realms to weave threads of kindness and forge bonds of compassion. 
+              Join our eternal quest to bring light to the world through the magic of volunteering.
             </p>
             
-            {/* Newsletter Signup */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email for impact updates"
-                className="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-teal-400 transition-colors duration-200"
-              />
-              <button className="bg-gradient-to-r from-teal-500 to-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-teal-500/25 transform hover:scale-105 transition-all duration-200">
-                Subscribe
-              </button>
+            {/* Enchanted Newsletter */}
+            <div className="bg-mystical-800/30 backdrop-blur-sm rounded-2xl p-6 border border-mystical-400/20">
+              <div className="flex items-center space-x-2 mb-3">
+                <Scroll className="w-5 h-5 text-mystical-400" />
+                <span className="text-mystical-200 font-medieval font-semibold">Join the Chronicle</span>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="email"
+                  placeholder="Your magical scroll address..."
+                  className="flex-1 px-4 py-3 bg-mystical-900/50 border border-mystical-600/50 rounded-xl text-white placeholder-mystical-400 focus:outline-none focus:border-mystical-400 transition-colors duration-200 font-medieval"
+                />
+                <button className="bg-gradient-to-r from-mystical-500 to-ember-500 text-white px-6 py-3 rounded-xl font-medieval font-semibold hover:shadow-lg hover:shadow-mystical-500/25 transform hover:scale-105 transition-all duration-200">
+                  <Sparkles className="w-4 h-4 inline mr-2" />
+                  Subscribe
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Realm Links */}
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li><Link to="/about" className="text-blue-200 hover:text-white transition-colors duration-200">About Us</Link></li>
-              <li><Link to="/how-it-works" className="text-blue-200 hover:text-white transition-colors duration-200">How It Works</Link></li>
-              <li><Link to="/volunteers" className="text-blue-200 hover:text-white transition-colors duration-200">For Volunteers</Link></li>
-              <li><Link to="/ngos" className="text-blue-200 hover:text-white transition-colors duration-200">For NGOs</Link></li>
-              <li><Link to="/impact" className="text-blue-200 hover:text-white transition-colors duration-200">Impact Reports</Link></li>
+            <div className="flex items-center space-x-2 mb-6">
+              <Shield className="w-5 h-5 text-mystical-400" />
+              <h3 className="text-white font-fantasy text-lg">Realm Portals</h3>
+            </div>
+            <ul className="space-y-3">
+              <li><Link to="/" className="text-mystical-200 hover:text-mystical-100 transition-colors duration-200 font-medieval flex items-center space-x-2 group">
+                <span className="w-2 h-2 bg-mystical-400 rounded-full group-hover:scale-125 transition-transform"></span>
+                <span>The Great Hall (Home)</span>
+              </Link></li>
+              <li><Link to="/volunteer-profile" className="text-mystical-200 hover:text-mystical-100 transition-colors duration-200 font-medieval flex items-center space-x-2 group">
+                <span className="w-2 h-2 bg-mystical-400 rounded-full group-hover:scale-125 transition-transform"></span>
+                <span>Soulstone Archive</span>
+              </Link></li>
+              <li><Link to="/ngo-profile" className="text-mystical-200 hover:text-mystical-100 transition-colors duration-200 font-medieval flex items-center space-x-2 group">
+                <span className="w-2 h-2 bg-mystical-400 rounded-full group-hover:scale-125 transition-transform"></span>
+                <span>Guild Sanctum</span>
+              </Link></li>
+              <li><Link to="/volunteer-dashboard" className="text-mystical-200 hover:text-mystical-100 transition-colors duration-200 font-medieval flex items-center space-x-2 group">
+                <span className="w-2 h-2 bg-mystical-400 rounded-full group-hover:scale-125 transition-transform"></span>
+                <span>Quest Hall</span>
+              </Link></li>
+              <li><Link to="/ngo-dashboard" className="text-mystical-200 hover:text-mystical-100 transition-colors duration-200 font-medieval flex items-center space-x-2 group">
+                <span className="w-2 h-2 bg-mystical-400 rounded-full group-hover:scale-125 transition-transform"></span>
+                <span>Guild Control Tower</span>
+              </Link></li>
             </ul>
           </div>
 
-          {/* Support */}
+          {/* Sacred Knowledge */}
           <div>
-            <h3 className="text-white font-semibold text-lg mb-4">Support</h3>
-            <ul className="space-y-2">
-              <li><Link to="/help" className="text-blue-200 hover:text-white transition-colors duration-200">Help Center</Link></li>
-              <li><Link to="/contact" className="text-blue-200 hover:text-white transition-colors duration-200">Contact Us</Link></li>
-              <li><Link to="/terms" className="text-blue-200 hover:text-white transition-colors duration-200">Terms of Service</Link></li>
-              <li><Link to="/privacy" className="text-blue-200 hover:text-white transition-colors duration-200">Privacy Policy</Link></li>
-              <li><Link to="/community-guidelines" className="text-blue-200 hover:text-white transition-colors duration-200">Community Guidelines</Link></li>
+            <div className="flex items-center space-x-2 mb-6">
+              <Scroll className="w-5 h-5 text-mystical-400" />
+              <h3 className="text-white font-fantasy text-lg">Sacred Knowledge</h3>
+            </div>
+            <ul className="space-y-3">
+              <li><Link to="/signup" className="text-mystical-200 hover:text-mystical-100 transition-colors duration-200 font-medieval flex items-center space-x-2 group">
+                <span className="w-2 h-2 bg-ember-400 rounded-full group-hover:scale-125 transition-transform"></span>
+                <span>Join the Fellowship</span>
+              </Link></li>
+              <li><Link to="/login" className="text-mystical-200 hover:text-mystical-100 transition-colors duration-200 font-medieval flex items-center space-x-2 group">
+                <span className="w-2 h-2 bg-ember-400 rounded-full group-hover:scale-125 transition-transform"></span>
+                <span>Enter the Realm</span>
+              </Link></li>
+              <li><a href="#" className="text-mystical-200 hover:text-mystical-100 transition-colors duration-200 font-medieval flex items-center space-x-2 group">
+                <span className="w-2 h-2 bg-ember-400 rounded-full group-hover:scale-125 transition-transform"></span>
+                <span>Ancient Scrolls (Help)</span>
+              </a></li>
+              <li><a href="#" className="text-mystical-200 hover:text-mystical-100 transition-colors duration-200 font-medieval flex items-center space-x-2 group">
+                <span className="w-2 h-2 bg-ember-400 rounded-full group-hover:scale-125 transition-transform"></span>
+                <span>Sacred Laws (Terms)</span>
+              </a></li>
+              <li><a href="#" className="text-mystical-200 hover:text-mystical-100 transition-colors duration-200 font-medieval flex items-center space-x-2 group">
+                <span className="w-2 h-2 bg-ember-400 rounded-full group-hover:scale-125 transition-transform"></span>
+                <span>Privacy Covenant</span>
+              </a></li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-slate-800 pt-8 flex flex-col sm:flex-row justify-between items-center">
-          <div className="flex items-center space-x-2 text-blue-200 mb-4 sm:mb-0">
-            <span>Crafted with purpose by the SkillSync team</span>
-            <Heart className="w-4 h-4 text-coral-400 animate-pulse" />
-            <span>🌍</span>
+        {/* Mystical Bottom Bar */}
+        <div className="border-t border-mystical-700/50 pt-8 flex flex-col sm:flex-row justify-between items-center">
+          <div className="flex items-center space-x-3 text-mystical-200 mb-4 sm:mb-0 font-medieval">
+            <span>Forged with ancient magic by the SkillSync Circle</span>
+            <Heart className="w-4 h-4 text-ember-400 animate-pulse" />
+            <span className="text-xl">🌟</span>
           </div>
           
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1 text-yellow-400">
-              <Star className="w-4 h-4 fill-current" />
-              <Star className="w-4 h-4 fill-current" />
-              <Star className="w-4 h-4 fill-current" />
-              <Star className="w-4 h-4 fill-current" />
-              <Star className="w-4 h-4 fill-current" />
+            <div className="flex items-center space-x-1 text-mystical-400">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-4 h-4 fill-current animate-pulse" style={{ animationDelay: `${i * 0.2}s` }} />
+              ))}
             </div>
-            <span className="text-blue-200 text-sm">
-              © 2024 SkillSync. All rights reserved.
+            <span className="text-mystical-300 text-sm font-medieval">
+              © 2024 SkillSync Realm. All magic reserved.
             </span>
           </div>
         </div>

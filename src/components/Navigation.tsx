@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Home, Compass, Gem, Users, Book } from 'lucide-react';
+import { Menu, Home, User, Building, LayoutDashboard, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Navigation = () => {
@@ -54,10 +54,10 @@ const Navigation = () => {
           <div className="hidden md:flex items-center space-x-8">
             {[
               { to: "/", label: "Home", icon: Home },
-              { to: "/quests", label: "Quests", icon: Compass },
-              { to: "/gems", label: "Gems & Badges", icon: Gem },
-              { to: "/leaderboard", label: "Leaderboard", icon: Users },
-              { to: "/guild-masters", label: "For Guild Masters", icon: Book },
+              { to: "/volunteer-profile", label: "Volunteer Profile", icon: User },
+              { to: "/ngo-profile", label: "NGO Profile", icon: Building },
+              { to: "/volunteer-dashboard", label: "Volunteer Dashboard", icon: LayoutDashboard },
+              { to: "/ngo-dashboard", label: "NGO Dashboard", icon: Users },
             ].map((item, index) => (
               <motion.div
                 key={item.to}
@@ -84,7 +84,7 @@ const Navigation = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.8 }}
           >
-            <Link to="/join">
+            <Link to="/signup">
               <motion.button
                 className="bg-gradient-to-r from-ember-400 via-ember-500 to-mystical-500 text-white px-6 py-2 rounded-full font-medieval font-semibold shadow-lg shadow-ember-500/30 relative overflow-hidden"
                 whileHover={{ 
@@ -132,23 +132,25 @@ const Navigation = () => {
           <div className="px-2 pt-2 pb-3 space-y-1">
             {[
               { to: "/", label: "Home", icon: Home },
-              { to: "/quests", label: "Quests", icon: Compass },
-              { to: "/gems", label: "Gems & Badges", icon: Gem },
-              { to: "/leaderboard", label: "Leaderboard", icon: Users },
-              { to: "/guild-masters", label: "For Guild Masters", icon: Book },
+              { to: "/volunteer-profile", label: "Volunteer Profile", icon: User },
+              { to: "/ngo-profile", label: "NGO Profile", icon: Building },
+              { to: "/volunteer-dashboard", label: "Volunteer Dashboard", icon: LayoutDashboard },
+              { to: "/ngo-dashboard", label: "NGO Dashboard", icon: Users },
             ].map((item) => (
               <Link 
                 key={item.to}
                 to={item.to} 
                 className="flex items-center space-x-3 px-3 py-2 text-mystical-100/80 hover:text-mystical-200 hover:bg-mystical-800/50 rounded-lg transition-all duration-300 font-medieval"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 <item.icon size={18} />
                 <span>{item.label}</span>
               </Link>
             ))}
             <Link 
-              to="/join" 
+              to="/signup" 
               className="block mx-3 mt-4 bg-gradient-to-r from-ember-400 to-mystical-500 text-white px-4 py-2 rounded-full font-medieval font-semibold text-center shadow-lg"
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               Join the Adventure
             </Link>
