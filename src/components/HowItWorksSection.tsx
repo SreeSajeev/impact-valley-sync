@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Search, Heart, Star, Sparkles, Map, Crown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import FloatingGem from './FloatingGem';
+import VideoBackground from './VideoBackground';
 
 const HowItWorksSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -47,9 +48,12 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-20 bg-gradient-to-b from-mystical-900 via-mystical-800 to-forest-900 relative overflow-hidden">
+    <section id="how-it-works" className="py-20 relative overflow-hidden">
+      {/* Background Video */}
+      <VideoBackground src="/bg_1.mp4" />
+      
       {/* Mystical Cave Background Effects */}
-      <div className="absolute inset-0 opacity-30">
+      <div className="absolute inset-0 opacity-30 z-10">
         {/* Floating cave crystals */}
         <motion.div 
           className="absolute top-20 left-10 w-8 h-8 bg-mystical-400 rounded-full blur-sm"
@@ -82,7 +86,7 @@ const HowItWorksSection = () => {
       </div>
 
       {/* Floating particles */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none z-10">
         {[...Array(12)].map((_, i) => (
           <motion.div
             key={i}
@@ -106,7 +110,7 @@ const HowItWorksSection = () => {
         ))}
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         {/* Mystical Cave Header */}
         <div className="text-center mb-16">
           <motion.div

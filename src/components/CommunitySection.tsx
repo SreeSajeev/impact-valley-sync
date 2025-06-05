@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { MessageCircle, Twitter, Linkedin, Heart, Sparkles, Crown, Shield } from 'lucide-react';
+import VideoBackground from './VideoBackground';
 
 const CommunitySection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -49,9 +50,12 @@ const CommunitySection = () => {
 
   return (
     <section id="community" className="py-20 relative overflow-hidden">
-      {/* Mystical Aurora Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-mystical-800 via-ember-900 to-mystical-950" />
+      {/* Background Video */}
+      <VideoBackground src="/bg_3.mp4" />
+      
+      {/* Mystical Aurora Background Overlays */}
+      <div className="absolute inset-0 z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-mystical-800/40 via-ember-900/30 to-mystical-950/40" />
         <div className="absolute inset-0 bg-gradient-to-t from-mystical-950/80 to-transparent" />
         
         {/* Floating Magical Elements */}
@@ -100,7 +104,7 @@ const CommunitySection = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         {/* Mystical Header */}
         <div className="text-center mb-16">
           <div className={`flex justify-center mb-6 transition-all duration-700 ${
@@ -148,7 +152,6 @@ const CommunitySection = () => {
           </div>
         </div>
 
-        {/* Mystical Realm Portals */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           {socialRealms.map((realm, index) => {
             const Icon = realm.icon;
@@ -189,7 +192,6 @@ const CommunitySection = () => {
           })}
         </div>
 
-        {/* Mystical Call to Action */}
         <div className={`text-center transition-all duration-700 delay-700 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>

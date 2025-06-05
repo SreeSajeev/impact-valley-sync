@@ -18,8 +18,8 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Keep the original video background */}
-      <VideoBackground src="/animebg_1.mp4" />
+      {/* Background Video */}
+      <VideoBackground src="/bg_2.mp4" />
 
       {/* Magical Forest Overlays */}
       <div className="absolute inset-0 z-10">
@@ -71,40 +71,6 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Commented out original background layers */}
-      {/* <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-900 via-blue-800 to-teal-600" />
-
-        <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-yellow-300 rounded-full animate-pulse"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${2 + Math.random() * 2}s`,
-              }}
-            />
-          ))}
-        </div>
-
-        <div
-          className="absolute bottom-0 w-full h-64 bg-gradient-to-t from-green-800 to-transparent opacity-80"
-          style={{ transform: `translateY(${scrollY * 0.5}px)` }}
-        />
-
-        <div
-          className="absolute bottom-0 left-0 w-32 h-32 bg-green-700 rounded-full opacity-60"
-          style={{ transform: `translateY(${scrollY * 0.3}px)` }}
-        />
-        <div
-          className="absolute bottom-0 right-0 w-24 h-24 bg-green-600 rounded-full opacity-40"
-          style={{ transform: `translateY(${scrollY * 0.4}px)` }}
-        />
-      </div> */}
-
       {/* Hero Content */}
       <div className="relative z-20 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         {/* Main Title */}
@@ -138,14 +104,14 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <Link to="/volunteer-signup">
+          <Link to="/volunteer-profile">
             <EnchantedButton variant="mystical" size="lg" className="group">
               <WandSparkles className="group-hover:animate-pulse" size={20} />
               <span>Begin Your Quest</span>
             </EnchantedButton>
           </Link>
 
-          <Link to="/ngo-signup">
+          <Link to="/ngo-profile">
             <EnchantedButton variant="forest" size="lg" className="group">
               <Compass className="group-hover:animate-pulse" size={20} />
               <span>Guild Masters</span>
